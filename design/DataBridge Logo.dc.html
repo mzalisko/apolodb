@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;background:#101214}
+  a{color:#f5a524;text-decoration:none}
+  a:hover{color:#e6e8ea}
+</style>
+</helmet>
+<section style="padding:36px 36px 8px;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#e6e8ea">
+  <div style="margin-bottom:18px">
+    <div style="font-size:19px;font-weight:700;letter-spacing:-.3px">Хаб — дані + центральність</div>
+    <div style="font-size:12.5px;color:#9aa1a9;margin-top:4px">4 нові трактування: центр як джерело істини, навколо — записи даних. Скажіть id (<a href="#3a">3a</a>–<a href="#3d">3d</a>).</div>
+  </div>
+  <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:stretch;margin-bottom:26px">
+
+    <div id="3a" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">3a</span><span style="font-weight:600;font-size:13.5px">Орбіта даних</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="#16181b"><circle cx="12" cy="12" r="3.1"></circle><circle cx="12" cy="12" r="7.6" fill="none" stroke="#16181b" stroke-width="1.5" stroke-dasharray="0.1 4.7" stroke-linecap="round"></circle><rect x="10.7" y="1.6" width="2.6" height="2.6" rx="0.7"></rect><rect x="19.8" y="10.7" width="2.6" height="2.6" rx="0.7"></rect><rect x="10.7" y="19.8" width="2.6" height="2.6" rx="0.7"></rect><rect x="1.6" y="10.7" width="2.6" height="2.6" rx="0.7"></rect></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="#f5a524"><circle cx="12" cy="12" r="3.1"></circle><circle cx="12" cy="12" r="7.6" fill="none" stroke="#f5a524" stroke-width="1.5" stroke-dasharray="0.1 4.7" stroke-linecap="round"></circle><rect x="10.7" y="1.6" width="2.6" height="2.6" rx="0.7"></rect><rect x="19.8" y="10.7" width="2.6" height="2.6" rx="0.7"></rect><rect x="10.7" y="19.8" width="2.6" height="2.6" rx="0.7"></rect><rect x="1.6" y="10.7" width="2.6" height="2.6" rx="0.7"></rect></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="#16181b"><circle cx="12" cy="12" r="3.4"></circle><rect x="10.6" y="1.4" width="2.8" height="2.8" rx="0.7"></rect><rect x="19.8" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="10.6" y="19.8" width="2.8" height="2.8" rx="0.7"></rect><rect x="1.4" y="10.6" width="2.8" height="2.8" rx="0.7"></rect></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Ядро-джерело істини, сайти-пікселі на орбіті. Пунктир кола = синхронізація, що ніколи не спиняється.</div>
+    </div>
+
+    <div id="3b" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">3b</span><span style="font-weight:600;font-size:13.5px">База → мережа</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="6.2" rx="6.4" ry="2.7"></ellipse><path d="M5.6 6.2v5.2c0 1.5 2.9 2.7 6.4 2.7s6.4-1.2 6.4-2.7V6.2"></path><path d="M12 14.1v3.2"></path><path d="M7.4 13.4l-2.9 3.4"></path><path d="M16.6 13.4l2.9 3.4"></path><rect x="10.6" y="18.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><rect x="2.5" y="18.1" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><rect x="18.7" y="18.1" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2" stroke-linecap="round"><ellipse cx="12" cy="6.2" rx="6.4" ry="2.7"></ellipse><path d="M5.6 6.2v5.2c0 1.5 2.9 2.7 6.4 2.7s6.4-1.2 6.4-2.7V6.2"></path><path d="M12 14.1v3.2"></path><path d="M7.4 13.4l-2.9 3.4"></path><path d="M16.6 13.4l2.9 3.4"></path><rect x="10.6" y="18.6" width="2.8" height="2.8" rx="0.7" fill="#f5a524" stroke="none"></rect><rect x="2.5" y="18.1" width="2.8" height="2.8" rx="0.7" fill="#f5a524" stroke="none"></rect><rect x="18.7" y="18.1" width="2.8" height="2.8" rx="0.7" fill="#f5a524" stroke="none"></rect></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.3" stroke-linecap="round"><ellipse cx="12" cy="6.2" rx="6.4" ry="2.7"></ellipse><path d="M5.6 6.2v5.2c0 1.5 2.9 2.7 6.4 2.7s6.4-1.2 6.4-2.7V6.2"></path><path d="M12 14.1v3.2"></path><path d="M7.4 13.4l-2.9 3.4"></path><path d="M16.6 13.4l2.9 3.4"></path><rect x="10.6" y="18.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><rect x="2.5" y="18.1" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><rect x="18.7" y="18.1" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Класичний циліндр БД, що роздає себе трьом сайтам. Найпряміша асоціація «дані згори — мережа знизу».</div>
+    </div>
+
+    <div id="3c" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">3c</span><span style="font-weight:600;font-size:13.5px">Сота-ядро</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.4l6.6 3.8v7.6L12 19.6l-6.6-3.8V8.2z"></path><circle cx="12" cy="12" r="2.6" fill="#16181b" stroke="none"></circle><path d="M12 9.4V4.4M14.25 13.3l4.35 2.5M9.75 13.3l-4.35 2.5" stroke-width="1.6"></path></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.4l6.6 3.8v7.6L12 19.6l-6.6-3.8V8.2z"></path><circle cx="12" cy="12" r="2.6" fill="#f5a524" stroke="none"></circle><path d="M12 9.4V4.4M14.25 13.3l4.35 2.5M9.75 13.3l-4.35 2.5" stroke-width="1.6"></path></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.4l6.6 3.8v7.6L12 19.6l-6.6-3.8V8.2z"></path><circle cx="12" cy="12" r="2.6" fill="#16181b" stroke="none"></circle></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Гексагон-комірка з ядром, з якого розходяться зв'язки у вершини. Центральність буквально вшита в геометрію.</div>
+    </div>
+
+    <div id="3d" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">3d</span><span style="font-weight:600;font-size:13.5px">Пульсар</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-linecap="round"><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.1" fill="#16181b" stroke="none"></rect><path d="M12 7.6a4.4 4.4 0 0 1 4.4 4.4" stroke-width="1.7"></path><path d="M12 4.6a7.4 7.4 0 0 1 7.4 7.4" stroke-width="1.7"></path><path d="M12 16.4a4.4 4.4 0 0 1-4.4-4.4" stroke-width="1.7"></path><path d="M12 19.4a7.4 7.4 0 0 1-7.4-7.4" stroke-width="1.7"></path></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-linecap="round"><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.1" fill="#f5a524" stroke="none"></rect><path d="M12 7.6a4.4 4.4 0 0 1 4.4 4.4" stroke-width="1.7"></path><path d="M12 4.6a7.4 7.4 0 0 1 7.4 7.4" stroke-width="1.7"></path><path d="M12 16.4a4.4 4.4 0 0 1-4.4-4.4" stroke-width="1.7"></path><path d="M12 19.4a7.4 7.4 0 0 1-7.4-7.4" stroke-width="1.7"></path></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-linecap="round"><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.1" fill="#16181b" stroke="none"></rect><path d="M12 7.6a4.4 4.4 0 0 1 4.4 4.4" stroke-width="2"></path><path d="M12 4.6a7.4 7.4 0 0 1 7.4 7.4" stroke-width="2"></path><path d="M12 16.4a4.4 4.4 0 0 1-4.4-4.4" stroke-width="2"></path><path d="M12 19.4a7.4 7.4 0 0 1-7.4-7.4" stroke-width="2"></path></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Піксель-ядро випромінює дуги-сигнали у два боки — трансляція даних із центру. Динамічний, добре анімується.</div>
+    </div>
+
+  </div>
+  <div style="margin-bottom:18px">
+    <div style="font-size:19px;font-weight:700;letter-spacing:-.3px;color:#6a7079">Хаб — попередня ітерація</div>
+    <div style="font-size:12.5px;color:#9aa1a9;margin-top:4px">Обраний напрям <a href="#1c">1c</a>, доопрацьований: 8 променів: 4 траси до вузлів-пікселів + 4 діагональні лінки з точками — центр роздає дані всім сайтам. Інтегровано в CRM.</div>
+  </div>
+  <div id="2a" style="width:640px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:18px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">2a</span><span style="font-weight:600;font-size:13.5px">Хаб · хрестовина</span></div>
+    <div style="display:flex;gap:12px;margin-bottom:12px;align-items:stretch">
+      <div style="width:120px;height:120px;border-radius:26px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9.8" y="9.8" width="4.4" height="4.4" rx="1.2" fill="#16181b" stroke="none"></rect><path d="M12 9.8V7"></path><path d="M14.2 12H17"></path><path d="M12 14.2V17"></path><path d="M9.8 12H7"></path><path d="M14.1 9.9L16 8"></path><path d="M17.4 6.6h0" stroke-width="3"></path><path d="M14.1 14.1L16 16"></path><path d="M17.4 17.4h0" stroke-width="3"></path><path d="M9.9 14.1L8 16"></path><path d="M6.6 17.4h0" stroke-width="3"></path><path d="M9.9 9.9L8 8"></path><path d="M6.6 6.6h0" stroke-width="3"></path><rect x="10.55" y="2.55" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect><rect x="17.95" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect><rect x="10.55" y="17.95" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect><rect x="2.55" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect></svg></div>
+      <div style="width:120px;height:120px;border-radius:26px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9.8" y="9.8" width="4.4" height="4.4" rx="1.2" fill="#f5a524" stroke="none"></rect><path d="M12 9.8V7"></path><path d="M14.2 12H17"></path><path d="M12 14.2V17"></path><path d="M9.8 12H7"></path><path d="M14.1 9.9L16 8"></path><path d="M17.4 6.6h0" stroke-width="3"></path><path d="M14.1 14.1L16 16"></path><path d="M17.4 17.4h0" stroke-width="3"></path><path d="M9.9 14.1L8 16"></path><path d="M6.6 17.4h0" stroke-width="3"></path><path d="M9.9 9.9L8 8"></path><path d="M6.6 6.6h0" stroke-width="3"></path><rect x="10.55" y="2.55" width="2.9" height="2.9" rx="0.75" fill="#f5a524" stroke="none"></rect><rect x="17.95" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#f5a524" stroke="none"></rect><rect x="10.55" y="17.95" width="2.9" height="2.9" rx="0.75" fill="#f5a524" stroke="none"></rect><rect x="2.55" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#f5a524" stroke="none"></rect></svg></div>
+      <div style="width:120px;height:120px;border-radius:26px;background:#f3f4f1;border:1px solid #dcdfd6;display:flex;align-items:center;justify-content:center"><svg width="74" height="74" viewBox="0 0 24 24" fill="none" stroke="#1a1d21" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9.8" y="9.8" width="4.4" height="4.4" rx="1.2" fill="#1a1d21" stroke="none"></rect><path d="M12 9.8V7"></path><path d="M14.2 12H17"></path><path d="M12 14.2V17"></path><path d="M9.8 12H7"></path><path d="M14.1 9.9L16 8"></path><path d="M17.4 6.6h0" stroke-width="3"></path><path d="M14.1 14.1L16 16"></path><path d="M17.4 17.4h0" stroke-width="3"></path><path d="M9.9 14.1L8 16"></path><path d="M6.6 17.4h0" stroke-width="3"></path><path d="M9.9 9.9L8 8"></path><path d="M6.6 6.6h0" stroke-width="3"></path><rect x="10.55" y="2.55" width="2.9" height="2.9" rx="0.75" fill="#1a1d21" stroke="none"></rect><rect x="17.95" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#1a1d21" stroke="none"></rect><rect x="10.55" y="17.95" width="2.9" height="2.9" rx="0.75" fill="#1a1d21" stroke="none"></rect><rect x="2.55" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#1a1d21" stroke="none"></rect></svg></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;justify-content:center">
+        <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px">
+          <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9.8" y="9.8" width="4.4" height="4.4" rx="1.2" fill="#16181b" stroke="none"></rect><path d="M12 9.8V7"></path><path d="M14.2 12H17"></path><path d="M12 14.2V17"></path><path d="M9.8 12H7"></path><path d="M14.1 9.9L16 8"></path><path d="M17.4 6.6h0" stroke-width="3"></path><path d="M14.1 14.1L16 16"></path><path d="M17.4 17.4h0" stroke-width="3"></path><path d="M9.9 14.1L8 16"></path><path d="M6.6 17.4h0" stroke-width="3"></path><path d="M9.9 9.9L8 8"></path><path d="M6.6 6.6h0" stroke-width="3"></path><rect x="10.55" y="2.55" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect><rect x="17.95" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect><rect x="10.55" y="17.95" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect><rect x="2.55" y="10.55" width="2.9" height="2.9" rx="0.75" fill="#16181b" stroke="none"></rect></svg></span>
+          <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+        </div>
+        <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Проти 1c: вісім променів двох рангів (траси з пікселями + тонкі лінки з точками) — щільний мережевий хаб без жодних небажаних асоціацій; тримає форму від 17px до 74px і на світлому тлі.</div>
+      </div>
+    </div>
+  </div>
+</section>
+<section style="padding:36px;font-family:'IBM Plex Sans',system-ui,sans-serif;color:#e6e8ea">
+  <div style="margin-bottom:22px">
+    <div style="font-size:19px;font-weight:700;letter-spacing:-.3px">DataBridge — 5 напрямів знака</div>
+    <div style="font-size:12.5px;color:#9aa1a9;margin-top:4px">Без моста й без банальщини. Кожен — у двох носіях + лого-рядок. Скажіть id (<a href="#1a">1a</a>–<a href="#1e">1e</a>) — інтегрую в CRM.</div>
+  </div>
+  <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:stretch">
+
+    <div id="1a" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">1a</span><span style="font-weight:600;font-size:13.5px">Портал</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="56" height="56" viewBox="0 0 24 24" fill="#16181b"><rect x="5.2" y="4" width="3" height="16" rx="1.5"></rect><rect x="15.8" y="4" width="3" height="16" rx="1.5"></rect><rect x="0.8" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="10.6" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="20.4" y="10.6" width="2.8" height="2.8" rx="0.7"></rect></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="56" height="56" viewBox="0 0 24 24" fill="#f5a524"><rect x="5.2" y="4" width="3" height="16" rx="1.5"></rect><rect x="15.8" y="4" width="3" height="16" rx="1.5"></rect><rect x="0.8" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="10.6" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="20.4" y="10.6" width="2.8" height="2.8" rx="0.7"></rect></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="#16181b"><rect x="5.2" y="4" width="3" height="16" rx="1.5"></rect><rect x="15.8" y="4" width="3" height="16" rx="1.5"></rect><rect x="0.8" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="10.6" y="10.6" width="2.8" height="2.8" rx="0.7"></rect><rect x="20.4" y="10.6" width="2.8" height="2.8" rx="0.7"></rect></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Дані проходять крізь браму: піксель зовні → у проймі → на іншому боці. Рух зчитується миттєво.</div>
+    </div>
+
+    <div id="1b" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">1b</span><span style="font-weight:600;font-size:13.5px">Злиття потоків</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.2" stroke-linecap="round"><path d="M3.5 6.5c7 0 5 5.5 10 5.5"></path><path d="M3.5 17.5c7 0 5-5.5 10-5.5"></path><path d="M3.5 12h10"></path><path d="M13.5 12h4.6" stroke-width="3.3"></path><rect x="19.2" y="10.3" width="3.4" height="3.4" rx="0.9" fill="#16181b" stroke="none"></rect></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2.2" stroke-linecap="round"><path d="M3.5 6.5c7 0 5 5.5 10 5.5"></path><path d="M3.5 17.5c7 0 5-5.5 10-5.5"></path><path d="M3.5 12h10"></path><path d="M13.5 12h4.6" stroke-width="3.3"></path><rect x="19.2" y="10.3" width="3.4" height="3.4" rx="0.9" fill="#f5a524" stroke="none"></rect></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.4" stroke-linecap="round"><path d="M3.5 6.5c7 0 5 5.5 10 5.5"></path><path d="M3.5 17.5c7 0 5-5.5 10-5.5"></path><path d="M3.5 12h10"></path><path d="M13.5 12h4.6" stroke-width="3.4"></path><rect x="19.2" y="10.3" width="3.4" height="3.4" rx="0.9" fill="#16181b" stroke="none"></rect></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Три джерела зливаються в один канонічний потік — суть продукту: N сайтів, одне правильне значення.</div>
+    </div>
+
+    <div id="1c" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">1c</span><span style="font-weight:600;font-size:13.5px">Хаб</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.1" fill="#16181b" stroke="none"></rect><path d="M12 9.9V5h4.2"></path><rect x="17.4" y="3.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><path d="M9.9 12H5.2"></path><rect x="1.5" y="10.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><path d="M12 14.1V19H7.8"></path><rect x="4" y="17.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.1" fill="#f5a524" stroke="none"></rect><path d="M12 9.9V5h4.2"></path><rect x="17.4" y="3.6" width="2.8" height="2.8" rx="0.7" fill="#f5a524" stroke="none"></rect><path d="M9.9 12H5.2"></path><rect x="1.5" y="10.6" width="2.8" height="2.8" rx="0.7" fill="#f5a524" stroke="none"></rect><path d="M12 14.1V19H7.8"></path><rect x="4" y="17.6" width="2.8" height="2.8" rx="0.7" fill="#f5a524" stroke="none"></rect></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><rect x="9.9" y="9.9" width="4.2" height="4.2" rx="1.1" fill="#16181b" stroke="none"></rect><path d="M12 9.9V5h4.2"></path><rect x="17.4" y="3.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><path d="M9.9 12H5.2"></path><rect x="1.5" y="10.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect><path d="M12 14.1V19H7.8"></path><rect x="4" y="17.6" width="2.8" height="2.8" rx="0.7" fill="#16181b" stroke="none"></rect></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Центральний вузол роздає дані сайтам трасами друкованої плати. Один центр — багато точок.</div>
+    </div>
+
+    <div id="1d" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">1d</span><span style="font-weight:600;font-size:13.5px">Дужки з даними</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 4.5H4.8v15h4.4"></path><path d="M14.8 4.5h4.4v15h-4.4"></path><rect x="10.35" y="10.35" width="3.3" height="3.3" rx="0.85" fill="#16181b" stroke="none"></rect></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="54" height="54" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 4.5H4.8v15h4.4"></path><path d="M14.8 4.5h4.4v15h-4.4"></path><rect x="10.35" y="10.35" width="3.3" height="3.3" rx="0.85" fill="#f5a524" stroke="none"></rect></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9.2 4.5H4.8v15h4.4"></path><path d="M14.8 4.5h4.4v15h-4.4"></path><rect x="10.35" y="10.35" width="3.3" height="3.3" rx="0.85" fill="#16181b" stroke="none"></rect></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Значення, взяте в дужки, — канонічний запис у системі. Строго, технічно, пасує моно-шрифтам CRM.</div>
+    </div>
+
+    <div id="1e" style="width:300px;background:#16181b;border:1px solid #2b3037;border-radius:14px;padding:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px"><span style="font-family:'IBM Plex Mono';font-size:10.5px;padding:2px 7px;border-radius:5px;background:rgba(245,165,36,.14);color:#f5a524">1e</span><span style="font-weight:600;font-size:13.5px">Цифровий пульс</span></div>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <div style="width:92px;height:92px;border-radius:20px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 15.5V8.5h6.2v7h6.2v-7h6.2"></path></svg></div>
+        <div style="width:92px;height:92px;border-radius:20px;background:#1c1f24;border:1px solid #2b3037;display:flex;align-items:center;justify-content:center"><svg width="58" height="58" viewBox="0 0 24 24" fill="none" stroke="#f5a524" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 15.5V8.5h6.2v7h6.2v-7h6.2"></path></svg></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:9px;background:#1c1f24;border:1px solid #2b3037;border-radius:9px;padding:8px 11px;margin-bottom:10px">
+        <span style="width:26px;height:26px;border-radius:7px;background:#f5a524;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#16181b" stroke-width="2.7" stroke-linecap="round" stroke-linejoin="round"><path d="M2.8 15.5V8.5h6.2v7h6.2v-7h6.2"></path></svg></span>
+        <span style="font-weight:700;font-size:14px">Data<span style="color:#f5a524">Bridge</span></span>
+      </div>
+      <div style="font-size:11.5px;color:#9aa1a9;line-height:1.5">Прямокутна хвиля — пульс цифрового сигналу, дані «живуть». Найлаконічніший і найсміливіший.</div>
+    </div>
+
+  </div>
+</section>
+</x-dc>
+</body>
+</html>
