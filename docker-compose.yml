@@ -64,6 +64,8 @@ services:
 
   pgsql:
     image: postgres:16
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # персистентність даних (інакше зникають при перестворенні)
     environment:
       POSTGRES_DB: databridge
       POSTGRES_USER: databridge
@@ -81,3 +83,6 @@ services:
 
 networks:
   db:
+
+volumes:
+  pgdata:

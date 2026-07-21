@@ -1,57 +1,66 @@
 @extends('layouts.app')
 @section('title', 'DataBridge — Сайти')
-@section('heading', 'Сайти')
+@section('crumbs')<span class="cur">Сайти</span>@endsection
 @section('content')
     @php
         $c = $payload['counts'];
         $labels = ['online' => 'онлайн', 'pending' => 'очікує', 'offline' => 'офлайн', 'inactive' => 'неактивний'];
     @endphp
 
-    <div class="page-head">
-        <h1>Сайти мережі</h1>
-        <div class="spacer"></div>
-        <a href="/admin/sites/create" class="btn btn-primary">+ Додати сайт</a>
-    </div>
-
     <div class="filters">
-        <a href="/admin" class="chip {{ $filter ? '' : 'active' }}">Усі</a>
-        <a href="/admin?status=online" class="chip {{ $filter === 'online' ? 'active' : '' }}">Онлайн · {{ $c['by_status']['online'] }}</a>
-        <a href="/admin?status=pending" class="chip {{ $filter === 'pending' ? 'active' : '' }}">Очікує · {{ $c['by_status']['pending'] }}</a>
-        <a href="/admin?status=offline" class="chip {{ $filter === 'offline' ? 'active' : '' }}">Офлайн · {{ $c['by_status']['offline'] }}</a>
-        <a href="/admin?status=inactive" class="chip {{ $filter === 'inactive' ? 'active' : '' }}">Неактивні · {{ $c['by_status']['inactive'] }}</a>
-        <span class="counter">{{ $c['filtered'] }} із {{ $c['total'] }}</span>
+        <div class="seg">
+            <a href="#" class="disabled" style="pointer-events:none">★ Обране</a>
+        </div>
+
+        <label style="position:relative;display:flex">
+            <select onchange="location.href=this.value"
+                    style="padding:8px 30px 8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);font:inherit;font-size:12.5px;cursor:pointer;min-width:150px;-webkit-appearance:none;appearance:none">
+                <option value="/admin" @selected(! $filter)>Статус: усі</option>
+                <option value="/admin?status=online" @selected($filter === 'online')>Онлайн</option>
+                <option value="/admin?status=pending" @selected($filter === 'pending')>Очікує</option>
+                <option value="/admin?status=offline" @selected($filter === 'offline')>Офлайн</option>
+                <option value="/admin?status=inactive" @selected($filter === 'inactive')>Неактивні</option>
+            </select>
+            <span style="position:absolute;right:11px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-faint);font-size:9px">▼</span>
+        </label>
+
+        <div class="spacer"></div>
+
+        <div class="seg">
+            <a href="/admin" class="active" title="Список">≣</a>
+            <a href="#" class="disabled" title="Плитки" style="pointer-events:none">▦</a>
+            <a href="#" class="disabled" title="Групи" style="pointer-events:none">⊟</a>
+        </div>
+        <span class="count">{{ $c['filtered'] }} із {{ $c['total'] }}</span>
     </div>
 
-    <div class="card">
-        <table>
-            <thead>
-                <tr><th>Сайт</th><th>Домен</th><th>Статус</th><th>Останнє оновлення</th><th></th></tr>
-            </thead>
-            <tbody>
-                @forelse($payload['sites'] as $site)
-                    <tr>
-                        <td>{{ $site['name'] }}</td>
-                        <td class="mono">{{ $site['domain'] }}</td>
-                        <td>
-                            <span class="status">
-                                <span class="dot s-{{ $site['status'] }}"></span>{{ $labels[$site['status']] ?? $site['status'] }}
-                            </span>
-                        </td>
-                        <td class="mono">{{ $site['last_seen_at'] ? \Illuminate\Support\Carbon::parse($site['last_seen_at'])->diffForHumans() : '—' }}</td>
-                        <td class="row-actions"><a class="btn" href="/admin/sites/{{ $site['id'] }}/credentials">Токен</a></td>
-                    </tr>
-                @empty
-                    <tr><td colspan="5" class="empty">Сайтів не знайдено. <a href="/admin">Скинути фільтри</a></td></tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    <div class="table">
+        <div class="gr thead">
+            <span></span><span>Сайт / домен</span><span>Групи</span><span>Статус</span><span></span>
+        </div>
 
-    <div class="legend">
-        <span><span class="dot s-online"></span> активний</span>
-        <span><span class="dot s-pending"></span> очікує</span>
-        <span><span class="dot s-offline"></span> офлайн</span>
-        <span><span class="dot s-inactive"></span> неактивний</span>
-        <span><span class="dot s-reserve"></span> резерв (стан номера)</span>
+        @forelse($payload['sites'] as $site)
+            <a class="gr trow" href="/admin/sites/{{ $site['id'] }}/credentials">
+                <button class="star" type="button" onclick="event.preventDefault()">★</button>
+                <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
+                    <span class="nm">{{ $site['name'] }}</span>
+                    <span class="dm">{{ $site['domain'] }}</span>
+                </div>
+                <div style="display:flex;gap:4px;flex-wrap:wrap">
+                    {{-- групи сайту (для цієї фічі зазвичай порожньо) --}}
+                </div>
+                <div>
+                    <span class="pill {{ $site['status'] }}"><span class="d"></span>{{ $labels[$site['status']] ?? $site['status'] }}</span>
+                </div>
+                <span class="chev">›</span>
+            </a>
+        @empty
+            <div class="empty">
+                <div class="box"></div>
+                <div class="t">Нічого не знайдено</div>
+                <div class="s">Змініть фільтри або пошуковий запит. Пошук охоплює також вкладені піддомени.</div>
+                <a class="btn" href="/admin" style="margin-top:4px">Скинути фільтри</a>
+            </div>
+        @endforelse
     </div>
 @endsection

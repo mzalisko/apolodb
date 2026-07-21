@@ -1,18 +1,17 @@
 @extends('layouts.app')
 @section('title', 'DataBridge — Токен сайту')
-@section('heading', 'Сайти')
+@section('crumbs')<a href="/admin">Сайти</a><span class="sep">/</span><span class="cur">{{ $site->name }}</span>@endsection
 @section('content')
-    <div class="page-head"><h1>{{ $site->name }} <span class="mono" style="color: var(--muted); font-size: 15px;">{{ $site->domain }}</span></h1></div>
+    <h1 class="page-h">{{ $site->name }} <span class="mono" style="color:var(--text-dim);font-size:14px;font-weight:400">{{ $site->domain }}</span></h1>
 
-    <div class="card" style="padding: 24px; max-width: 560px;">
-        <p style="margin-top: 0;">Публічний ідентифікатор:</p>
-        <code class="mono" style="display: block; word-break: break-all;">{{ $site->site_identifier }}</code>
-        <p style="color: var(--muted); font-size: 13px;">Секрет зберігається зашифровано й не показується повторно. За втрати — перевипустіть.</p>
+    <div class="card" style="padding: 22px; max-width: 560px;">
+        <div class="k" style="font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint)">Публічний ідентифікатор</div>
+        <code class="mono" style="display:block;word-break:break-all;margin:5px 0 14px;font-size:12.5px">{{ $site->site_identifier }}</code>
+        <div style="color:var(--text-dim);font-size:12px">Секрет зберігається зашифровано й не показується повторно. За втрати — перевипустіть.</div>
 
         <div style="margin-top: 16px; display: flex; gap: 8px;">
-            <button class="btn btn-primary" id="reissue" type="button">Перевипустити секрет</button>
+            <button class="btn btn-accent" id="reissue" type="button">Перевипустити секрет</button>
             <button class="btn btn-danger" id="revoke" type="button">Відкликати</button>
-            <a class="btn" href="/admin">← до списку</a>
         </div>
 
         <div class="msg" id="msg"></div>

@@ -1,10 +1,10 @@
 @extends('layouts.app')
 @section('title', 'DataBridge — Додати сайт')
-@section('heading', 'Сайти')
+@section('crumbs')<a href="/admin">Сайти</a><span class="sep">/</span><span class="cur">Додати сайт</span>@endsection
 @section('content')
-    <div class="page-head"><h1>Додати сайт</h1></div>
+    <h1 class="page-h">Додати сайт</h1>
 
-    <div class="card" style="padding: 24px; max-width: 520px;">
+    <div class="card" style="padding: 22px; max-width: 520px;">
         <label for="name">Назва</label>
         <input id="name" type="text" placeholder="Мій сайт">
 
@@ -12,17 +12,17 @@
         <input id="domain" type="text" placeholder="example.com">
 
         <div style="margin-top: 18px; display: flex; gap: 8px;">
-            <button class="btn btn-primary" id="submit" type="button">Зареєструвати</button>
+            <button class="btn btn-accent" id="submit" type="button">Зареєструвати</button>
             <a class="btn" href="/admin">Скасувати</a>
         </div>
 
         <div class="err" id="err"></div>
 
         <div class="secret-box" id="secret" style="display: none;">
-            <strong>Облікові дані — секрет показується ОДИН РАЗ, збережіть його:</strong>
-            <div class="mono" style="margin-top: 8px; color: var(--muted);">site-id</div>
+            <strong>Облікові дані — секрет показується ОДИН РАЗ, збережіть:</strong>
+            <div class="k">site-id</div>
             <code id="siteId"></code>
-            <div class="mono" style="color: var(--muted);">signing-secret</div>
+            <div class="k">signing-secret</div>
             <code id="signingSecret"></code>
         </div>
     </div>
