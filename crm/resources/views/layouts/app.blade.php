@@ -61,9 +61,9 @@
                     <a href="/admin/sites/{{ $fs->id }}/credentials"
                        style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;color:var(--text-dim);font-size:12px;text-decoration:none">
                         <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>
-                        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'IBM Plex Mono';font-size:11px">{{ $fs->domain }}</span>
+                        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:var(--font-mono);font-size:11px">{{ $fs->domain }}</span>
                         @if($fs->subdomains->count())
-                            <span style="font-family:'IBM Plex Mono';font-size:10px;color:var(--text-faint)">+{{ $fs->subdomains->count() }}</span>
+                            <span style="font-family:var(--font-mono);font-size:10px;color:var(--text-faint)">+{{ $fs->subdomains->count() }}</span>
                         @endif
                     </a>
                     @foreach($fs->subdomains as $sub)
@@ -84,7 +84,7 @@
                            style="flex:1;display:flex;align-items:center;gap:8px;padding:6px 4px 6px 8px;color:var(--text-dim);font-size:12px;min-width:0;text-decoration:none">
                             <span style="width:13px;height:13px;color:var(--accent);display:flex;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg></span>
                             <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $fg->name }}</span>
-                            <span style="font-family:'IBM Plex Mono';font-size:10px;padding:1px 6px;border-radius:5px;background:var(--surface-3);color:var(--text-faint);flex-shrink:0">{{ $fg->sites_count }} сайти</span>
+                            <span style="font-family:var(--font-mono);font-size:10px;padding:1px 6px;border-radius:5px;background:var(--surface-3);color:var(--text-faint);flex-shrink:0">{{ $fg->sites_count }} сайти</span>
                         </a>
                         <button type="button" title="Прибрати з обраного" onclick="dbToggleGroupFav({{ $fg->id }}, this)"
                                 style="background:transparent;border:0;color:var(--accent);cursor:pointer;font-size:12px;padding:4px 8px;flex-shrink:0">★</button>
@@ -167,7 +167,7 @@
                 <div>
                     <label style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0 0 7px">Домен</label>
                     <input id="addSiteDomain" type="text" placeholder="novyi-sait.com.ua"
-                           style="width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'IBM Plex Mono';font-size:13px;outline:none">
+                           style="width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--font-mono);font-size:13px;outline:none">
                 </div>
                 <div id="addSiteError" style="display:none;color:var(--err);font-size:12.5px"></div>
             </div>

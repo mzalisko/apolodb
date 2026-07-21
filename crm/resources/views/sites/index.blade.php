@@ -75,7 +75,7 @@
             <button type="button" title="Групувати по групах" onclick="dbFilter('view','groups')" style="{{ $vt($view === 'groups') }}">Групи</button>
         </div>
 
-        <span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--text-faint)">{{ $c['filtered'] }} із {{ $c['total'] }} сайтів</span>
+        <span style="font-family:var(--font-mono);font-size:12px;color:var(--text-faint)">{{ $c['filtered'] }} із {{ $c['total'] }} сайтів</span>
     </div>
 
     {{-- ═══ Режим ПЛИТКИ ═══ --}}
@@ -88,7 +88,7 @@
                     <div style="display:flex;align-items:flex-start;gap:9px">
                         <div style="flex:1;min-width:0">
                             <div style="font-weight:600;font-size:13.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $s['name'] }}</div>
-                            <div style="font-family:'IBM Plex Mono';font-size:11px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $s['domain'] }}</div>
+                            <div style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $s['domain'] }}</div>
                         </div>
                         <button class="star" type="button" style="color:{{ $isFav ? 'var(--accent)' : 'var(--text-faint)' }};font-size:15px;flex-shrink:0"
                                 onclick="event.preventDefault();event.stopPropagation();dbToggleFav({{ $s['id'] }})">★</button>
@@ -116,7 +116,7 @@
                     <div style="display:flex;align-items:center;gap:8px;padding-top:10px;border-top:1px solid var(--border)">
                         <div style="flex:1"></div>
                         <span style="width:6px;height:6px;border-radius:50%;background:{{ $dot[$s['status']] ?? 'var(--text-faint)' }}"></span>
-                        <span style="font-family:'IBM Plex Mono';font-size:10.5px;color:var(--text-dim)">
+                        <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim)">
                             @php $ls = $s['last_seen_at'] ? \Illuminate\Support\Carbon::parse($s['last_seen_at']) : null; @endphp
                             {{ $ls ? ($ls->diffInSeconds() < 60 ? 'щойно' : ($ls->diffInMinutes() < 60 ? $ls->diffInMinutes().' хв тому' : $ls->diffInHours().' год тому')) : 'ще не звітував' }}
                         </span>
@@ -135,7 +135,7 @@
                     <div style="display:flex;align-items:center;gap:11px;padding:12px 15px;background:var(--surface-2)">
                         <span style="width:18px;height:18px;color:var(--accent);display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg></span>
                         <span style="font-weight:600;font-size:14px;flex:1">{{ $gname }}</span>
-                        <span style="font-family:'IBM Plex Mono';font-size:11px;padding:2px 8px;border-radius:6px;background:var(--surface-3);color:var(--text-dim)">{{ count($gsites) }} сайтів</span>
+                        <span style="font-family:var(--font-mono);font-size:11px;padding:2px 8px;border-radius:6px;background:var(--surface-3);color:var(--text-dim)">{{ count($gsites) }} сайтів</span>
                         <a href="/admin?group={{ urlencode($gname) }}" title="Фільтрувати по цій групі" style="font-size:11.5px;color:var(--text-dim);text-decoration:none;padding:2px 4px">фільтр →</a>
                     </div>
                     @foreach($gsites as $s)
@@ -147,7 +147,7 @@
                                         onclick="event.preventDefault();event.stopPropagation();dbToggleFav({{ $s['id'] }})">★</button>
                                 <div style="min-width:0">
                                     <div style="font-weight:600;font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $s['name'] }}</div>
-                                    <div style="font-family:'IBM Plex Mono';font-size:10.5px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $s['domain'] }}</div>
+                                    <div style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $s['domain'] }}</div>
                                 </div>
                             </div>
                             <div><span class="pill {{ $s['status'] }}"><span class="d"></span>{{ $labels[$s['status']] ?? $s['status'] }}</span></div>
@@ -177,7 +177,7 @@
                                 onclick="event.preventDefault();event.stopPropagation();dbToggleFav({{ $site['id'] }})">★</button>
                         <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
                             <span style="font-weight:600;font-size:13px">{{ $site['name'] }}</span>
-                            <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--text-dim)">{{ $site['domain'] }}</span>
+                            <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-dim)">{{ $site['domain'] }}</span>
                         </div>
                         <div style="display:flex;gap:4px;flex-wrap:wrap">
                             @foreach($site['groups'] as $g)
@@ -198,7 +198,7 @@
                                 <span style="color:var(--text-faint);font-size:12px">└</span>
                                 <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
                                     <span style="font-size:12.5px;color:var(--text)">{{ $sd['name'] }}</span>
-                                    <span style="font-family:'IBM Plex Mono';font-size:10.5px;color:var(--text-faint)">{{ $sd['domain'] }}</span>
+                                    <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint)">{{ $sd['domain'] }}</span>
                                 </div>
                             </div>
                             <span style="font-size:10.5px;color:var(--text-faint)">піддомен</span>

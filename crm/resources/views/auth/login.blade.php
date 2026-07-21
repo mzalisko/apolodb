@@ -17,7 +17,7 @@
         .gate h1 { font-weight: 700; font-size: 16px; margin: 0 0 3px; }
         .gate .lead { font-size: 12.5px; color: var(--text-dim); margin-bottom: 20px; }
         .gate label { display: block; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--text-faint); margin: 0 0 7px; }
-        .gate input[type=email], .gate input[type=password] { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'IBM Plex Mono'; font-size: 13px; outline: none; margin-bottom: 14px; }
+        .gate input[type=email], .gate input[type=password] { width: 100%; padding: 10px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: var(--font-mono); font-size: 13px; outline: none; margin-bottom: 14px; }
         .gate input:focus { border-color: var(--accent); }
         .roles { display: flex; gap: 8px; margin-bottom: 20px; }
         .roles button { flex: 1; padding: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 9px; cursor: pointer; font: inherit; font-size: 12.5px; color: var(--text-dim); font-weight: 500; }
