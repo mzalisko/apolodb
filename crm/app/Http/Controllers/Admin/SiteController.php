@@ -164,4 +164,37 @@ class SiteController extends Controller
 
         return response()->json(['id' => $site->id, 'status' => 'pending']);
     }
+
+    /** §3.2 Відкликання секрету (FR-005, SC-006). site-id НЕ змінюється. */
+    public function revokeCredential(Request $request, Site $site): JsonResponse
+    {
+        CredentialService::revoke($site);
+
+        $actor = $request->user();
+        EventLogger::record('token_revoked', $site, $actor?->email ?? 'system', $actor?->id, 'credential');
+
+        return response()->json([
+            'site_id' => $site->site_identifier,   // незмінний (A-4)
+            'token_state' => 'revoked',
+            'revoked_at' => now()->toIso8601String(),
+        ]);
+    }
+
+    /** §3.2 Перевипуск секрету — новий показ ОДИН РАЗ; site-id НЕ змінюється (A-4). */
+    public function reissueCredential(Request $request, Site $site): JsonResponse
+    {
+        $secret = CredentialService::reissue($site);
+
+        $actor = $request->user();
+        EventLogger::record('token_reissued', $site, $actor?->email ?? 'system', $actor?->id, 'credential');
+
+        return response()->json([
+            'credentials' => [
+                'site_id' => $site->fresh()->site_identifier,   // НЕ змінюється
+                'signing_secret' => $secret,                    // показ один раз
+                'sig_version' => config('databridge.sig_version', 'v1'),
+            ],
+            'previous_token_state' => 'revoked',
+        ], 201);
+    }
 }

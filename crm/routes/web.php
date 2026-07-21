@@ -14,6 +14,8 @@ Route::get('/', function () {
  */
 Route::middleware(EnsureAdmin::class)->prefix('admin')->group(function () {
     Route::get('/', [SiteController::class, 'index']);                    // §3.3 US3 (Blade-сторінка)
+    Route::view('/sites/create', 'sites.create');                        // US1 форма реєстрації
+    Route::get('/sites/{site}/credentials', fn (\App\Models\Site $site) => view('sites.credentials', ['site' => $site])); // US4 керування токеном
     Route::post('/sites', [SiteController::class, 'register']);           // §3.1 US1
     Route::get('/sites', [SiteController::class, 'index']);               // §3.3 US3 (JSON API)
     Route::post('/sites/{site}/deactivate', [SiteController::class, 'deactivate']);   // §3.4 US3

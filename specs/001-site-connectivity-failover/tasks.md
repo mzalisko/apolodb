@@ -81,7 +81,7 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 - [x] T022 [P] [US1] `crm/app/Services/DomainNormalizer.php` — нормалізація домену (lowercase, зняття схеми/порту/слеша) перед UNIQUE-перевіркою (FR-006)
 - [x] T023 [US1] `SiteController@register` (`POST /admin/sites`) у `crm/app/Http/Controllers/Admin/SiteController.php` — створює `site` (status `pending`), викликає `CredentialService::issue`, повертає `201` з `credentials` (секрет один раз) за contract §3.1 (залежить від T015, T022)
 - [x] T024 [US1] Емісія подій `site_registered` + `token_issued` через `EventLogger` у `crm/app/Http/Controllers/Admin/SiteController.php` (register, FR-021)
-- [ ] T025 [P] [US1] Blade-форма «Додати сайт» + показ одноразового секрету у `crm/resources/views/sites/create.blade.php`
+- [x] T025 [P] [US1] Blade-форма «Додати сайт» + показ одноразового секрету у `crm/resources/views/sites/create.blade.php`
 - [x] T026 [US1] Маршрут реєстрації у `crm/routes/web.php` (під `EnsureAdmin`)
 
 **Checkpoint**: US1 повністю функціональна й тестована незалежно
@@ -150,15 +150,15 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 ### Tests for User Story 4 ⚠️
 
-- [ ] T049 [P] [US4] Тест відкликання (старий секрет → `401/403` у межах ≤1 хв — SC-006) у `crm/tests/Feature/RevokeCredentialTest.php`
-- [ ] T050 [P] [US4] Тест перевипуску (новий секрет працює; `site-id` незмінний — A-4; показ один раз) у `crm/tests/Feature/ReissueCredentialTest.php`
+- [x] T049 [P] [US4] Тест відкликання (старий секрет → `401/403` у межах ≤1 хв — SC-006) у `crm/tests/Feature/RevokeCredentialTest.php`
+- [x] T050 [P] [US4] Тест перевипуску (новий секрет працює; `site-id` незмінний — A-4; показ один раз) у `crm/tests/Feature/ReissueCredentialTest.php`
 
 ### Implementation for User Story 4
 
-- [ ] T051 [US4] `SiteController@revokeCredential` + `@reissueCredential` (`POST /admin/sites/{id}/credentials:revoke|:reissue`) у `crm/app/Http/Controllers/Admin/SiteController.php` — через `CredentialService` (revoke + новий `active`); `site_identifier` не змінюється (contract §3.2)
-- [ ] T052 [US4] Емісія подій `token_revoked` / `token_reissued` через `EventLogger` у `crm/app/Http/Controllers/Admin/SiteController.php` (FR-021)
-- [ ] T053 [US4] Оптимістичний контроль конкурентних дій двох операторів над одним сайтом (edge case) у `crm/app/Services/CredentialService.php`
-- [ ] T054 [P] [US4] Blade-UI відкликання/перевипуску в огляді сайту + показ нового секрету один раз у `crm/resources/views/sites/credentials.blade.php`
+- [x] T051 [US4] `SiteController@revokeCredential` + `@reissueCredential` (`POST /admin/sites/{id}/credentials:revoke|:reissue`) у `crm/app/Http/Controllers/Admin/SiteController.php` — через `CredentialService` (revoke + новий `active`); `site_identifier` не змінюється (contract §3.2)
+- [x] T052 [US4] Емісія подій `token_revoked` / `token_reissued` через `EventLogger` у `crm/app/Http/Controllers/Admin/SiteController.php` (FR-021)
+- [x] T053 [US4] Оптимістичний контроль конкурентних дій двох операторів над одним сайтом (edge case) у `crm/app/Services/CredentialService.php`
+- [x] T054 [P] [US4] Blade-UI відкликання/перевипуску в огляді сайту + показ нового секрету один раз у `crm/resources/views/sites/credentials.blade.php`
 
 **Checkpoint**: усі чотири P1-історії функціональні й незалежно тестовані
 

@@ -53,6 +53,9 @@ class CredentialService
     public static function revoke(Site $site): void
     {
         DB::transaction(function () use ($site) {
+            // Серіалізація конкурентних дій над одним сайтом (edge case, T052).
+            Site::whereKey($site->id)->lockForUpdate()->first();
+
             SiteCredential::where('site_id', $site->id)
                 ->where('state', 'active')
                 ->update(['state' => 'revoked', 'revoked_at' => now()]);
@@ -69,6 +72,7 @@ class CredentialService
     public static function reissue(Site $site): string
     {
         return DB::transaction(function () use ($site) {
+            Site::whereKey($site->id)->lockForUpdate()->first(); // серіалізація (T052)
             self::revoke($site);
 
             return self::issue($site->fresh());
