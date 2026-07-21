@@ -13,8 +13,9 @@ Route::get('/', function () {
  * Session-cookie + EnsureAdmin; CSRF-виняток для admin/* (JSON API) у bootstrap/app.php.
  */
 Route::middleware(EnsureAdmin::class)->prefix('admin')->group(function () {
+    Route::get('/', [SiteController::class, 'index']);                    // §3.3 US3 (Blade-сторінка)
     Route::post('/sites', [SiteController::class, 'register']);           // §3.1 US1
-    Route::get('/sites', [SiteController::class, 'index']);               // §3.3 US3
+    Route::get('/sites', [SiteController::class, 'index']);               // §3.3 US3 (JSON API)
     Route::post('/sites/{site}/deactivate', [SiteController::class, 'deactivate']);   // §3.4 US3
     Route::post('/sites/{site}/reactivate', [SiteController::class, 'reactivate']);   // §3.4 US3
     Route::post('/sites/{site}/credentials/revoke', [SiteController::class, 'revokeCredential']);   // §3.2 US4

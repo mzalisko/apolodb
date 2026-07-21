@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Site;
+use App\Models\SiteStatus;
 use App\Services\CredentialService;
 use App\Services\DomainNormalizer;
 use App\Services\EventLogger;
@@ -70,5 +71,97 @@ class SiteController extends Controller
                 'sig_version' => config('databridge.sig_version', 'v1'),
             ],
         ], 201);
+    }
+
+    /** §3.3 Список сайтів зі статусом + часом оновлення, фільтр «N із M» (FR-015/016/017/018). */
+    public function index(Request $request): \Symfony\Component\HttpFoundation\Response
+    {
+        $filter = $request->query('status');
+        $perPage = max(1, (int) $request->query('per_page', 50));
+        $page = max(1, (int) $request->query('page', 1));
+
+        $byStatus = SiteStatus::query()
+            ->selectRaw('status, count(*) as c')
+            ->groupBy('status')
+            ->pluck('c', 'status');
+
+        $total = (int) Site::count();
+
+        $query = Site::query()->with('status');
+        if ($filter) {
+            $query->whereHas('status', fn ($q) => $q->where('status', $filter));
+        }
+        $filtered = $filter ? (int) (clone $query)->count() : $total;
+
+        $sites = $query->orderBy('name')->forPage($page, $perPage)->get();
+
+        $payload = [
+            'counts' => [
+                'total' => $total,
+                'filtered' => $filtered,
+                'by_status' => [
+                    'online' => (int) ($byStatus['online'] ?? 0),
+                    'pending' => (int) ($byStatus['pending'] ?? 0),
+                    'offline' => (int) ($byStatus['offline'] ?? 0),
+                    'inactive' => (int) ($byStatus['inactive'] ?? 0),
+                ],
+            ],
+            'sites' => $sites->map(fn (Site $s) => [
+                'id' => $s->id,
+                'name' => $s->name,
+                'domain' => $s->domain,
+                'status' => $s->status?->status,
+                'last_seen_at' => $s->status?->last_seen_at?->toIso8601String(),
+                'token_state' => $s->active_credential_id ? 'active' : 'revoked',
+            ])->values()->all(),
+            'page' => $page,
+            'per_page' => $perPage,
+        ];
+
+        if (! $request->wantsJson()) {
+            return response()->view('sites.index', ['payload' => $payload, 'filter' => $filter]);
+        }
+
+        return response()->json($payload);
+    }
+
+    /** §3.4 Ручне вимкнення сайту → статус inactive досяжний (FR-013/016). */
+    public function deactivate(Request $request, Site $site): JsonResponse
+    {
+        $old = $site->status?->status;
+
+        $site->update(['deactivated_at' => now()]);
+        $site->status()->update([
+            'status' => 'inactive',
+            'last_status_change_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $actor = $request->user();
+        EventLogger::record('site_deactivated', $site, $actor?->email ?? 'system', $actor?->id, 'status', $old, 'inactive');
+
+        return response()->json([
+            'id' => $site->id,
+            'status' => 'inactive',
+            'deactivated_at' => $site->fresh()->deactivated_at?->toIso8601String(),
+        ]);
+    }
+
+    /** §3.4 Реактивація → pending (чекає наступного heartbeat). */
+    public function reactivate(Request $request, Site $site): JsonResponse
+    {
+        $old = $site->status?->status;
+
+        $site->update(['deactivated_at' => null]);
+        $site->status()->update([
+            'status' => 'pending',
+            'last_status_change_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        $actor = $request->user();
+        EventLogger::record('site_reactivated', $site, $actor?->email ?? 'system', $actor?->id, 'status', $old, 'pending');
+
+        return response()->json(['id' => $site->id, 'status' => 'pending']);
     }
 }

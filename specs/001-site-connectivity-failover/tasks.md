@@ -128,15 +128,15 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 ### Tests for User Story 3 ⚠️
 
-- [ ] T043 [P] [US3] Feature-тест списку (статус, `last_seen_at`, легенда — FR-015/016) у `crm/tests/Feature/SiteListTest.php`
-- [ ] T044 [P] [US3] Тест фільтра за статусом + counts «N із M» (FR-018) у `crm/tests/Feature/SiteListFilterTest.php`
+- [x] T043 [P] [US3] Feature-тест списку (статус, `last_seen_at`, легенда — FR-015/016) у `crm/tests/Feature/SiteListTest.php`
+- [x] T044 [P] [US3] Тест фільтра за статусом + counts «N із M» (FR-018) у `crm/tests/Feature/SiteListFilterTest.php`
 
 ### Implementation for User Story 3
 
-- [ ] T045 [US3] `SiteController@index` (`GET /admin/sites?status=…`) у `crm/app/Http/Controllers/Admin/SiteController.php` — вибірка з `site_statuses`, `counts` (total/filtered/by_status) за contract §3.3
-- [ ] T046 [US3] `SiteController@deactivate`/`@reactivate` (`POST /admin/sites/{id}:deactivate|:reactivate`) у `crm/app/Http/Controllers/Admin/SiteController.php` — робить статус `inactive` досяжним (FR-013/016, contract §3.4) + події `site_deactivated`/`site_reactivated`
-- [ ] T047 [P] [US3] Blade-в'ю списку у `crm/resources/views/sites/index.blade.php` — єдина легенда статусів, фільтр, «N із M»; **локальні** ассети (Принцип III), Alpine опційно (не real-time — FR-017)
-- [ ] T048 [US3] Маршрути списку/деактивації у `crm/routes/web.php`
+- [x] T045 [US3] `SiteController@index` (`GET /admin/sites?status=…`) у `crm/app/Http/Controllers/Admin/SiteController.php` — вибірка з `site_statuses`, `counts` (total/filtered/by_status) за contract §3.3
+- [x] T046 [US3] `SiteController@deactivate`/`@reactivate` (`POST /admin/sites/{id}:deactivate|:reactivate`) у `crm/app/Http/Controllers/Admin/SiteController.php` — робить статус `inactive` досяжним (FR-013/016, contract §3.4) + події `site_deactivated`/`site_reactivated`
+- [x] T047 [P] [US3] Blade-в'ю списку у `crm/resources/views/sites/index.blade.php` — єдина легенда статусів, фільтр, «N із M»; **локальні** ассети (Принцип III), Alpine опційно (не real-time — FR-017)
+- [x] T048 [US3] Маршрути списку/деактивації у `crm/routes/web.php`
 
 **Checkpoint**: усі три статусні US працюють; список відображає реальні стани
 
