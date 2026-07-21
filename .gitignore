@@ -1,0 +1,55 @@
+# ============ DataBridge monorepo .gitignore ============
+
+# ---- Secrets / env (NEVER commit — Constitution II & Security) ----
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+auth.json
+
+# ---- CRM (Laravel) ----
+/crm/vendor/
+/crm/node_modules/
+/crm/public/build/
+/crm/public/hot
+/crm/public/storage
+/crm/storage/*.key
+/crm/storage/logs/*
+/crm/storage/framework/cache/data/*
+/crm/storage/framework/sessions/*
+/crm/storage/framework/testing/*
+/crm/storage/framework/views/*
+/crm/bootstrap/cache/*
+/crm/.phpunit.result.cache
+/crm/.phpunit.cache
+/crm/.env
+/crm/.env.backup
+/crm/Homestead.json
+/crm/Homestead.yaml
+/crm/npm-debug.log
+/crm/yarn-error.log
+
+# ---- WordPress plugin (vanilla PHP) ----
+/plugin/vendor/
+/plugin/node_modules/
+
+# ---- Node (root, if any) ----
+node_modules/
+
+# ---- Docker ----
+# (compose files ARE tracked; local overrides are not)
+docker-compose.override.yml
+
+# ---- Universal / OS / editors ----
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+.idea/
+.vscode/
+
+# ---- Obsidian per-machine UI state (churns constantly) ----
+/obsidianDb/.obsidian/workspace.json
+/obsidianDb/.obsidian/graph.json

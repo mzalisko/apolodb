@@ -1,0 +1,51 @@
+# DataBridge CRM dev stack — PHP 8.5 + PostgreSQL 16 + Redis 7.
+# Usage: docker compose run --rm app php artisan migrate
+#        docker compose run --rm app ./vendor/bin/pest
+services:
+  app:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    volumes:
+      - ./crm:/app
+    working_dir: /app
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      APP_ENV: local
+      DB_CONNECTION: pgsql
+      DB_HOST: pgsql
+      DB_PORT: 5432
+      DB_DATABASE: databridge
+      DB_USERNAME: databridge
+      DB_PASSWORD: secret
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: database
+    networks: [db]
+
+  pgsql:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: databridge
+      POSTGRES_USER: databridge
+      POSTGRES_PASSWORD: secret
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U databridge -d databridge"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [db]
+
+  redis:
+    image: redis:7
+    networks: [db]
+
+networks:
+  db:

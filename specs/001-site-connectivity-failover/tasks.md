@@ -32,13 +32,13 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 **Purpose**: ініціалізація монорепо та базова структура
 
-- [ ] T001 Створити структуру монорепо: каталоги `crm/` (Laravel) і `plugin/` (WordPress) у корені (Принцип I)
-- [ ] T002 Ініціалізувати Laravel 13.x у `crm/` (PHP 8.3+); налаштувати `crm/.env` під PostgreSQL 16 + Redis
+- [x] T001 Створити структуру монорепо: каталоги `crm/` (Laravel) і `plugin/` (WordPress) у корені (Принцип I)
+- [x] T002 Ініціалізувати Laravel 13.x у `crm/` (PHP 8.3+); налаштувати `crm/.env` під PostgreSQL 16 + Redis
 - [ ] T003 [P] Додати й налаштувати Laravel Horizon (Redis-черга) у `crm/config/horizon.php`
 - [ ] T004 [P] Налаштувати Pest у `crm/` (`crm/tests/Pest.php`, `crm/phpunit.xml`)
 - [ ] T005 [P] Налаштувати Vite + npm із **локальними** ассетами (шрифти/Tailwind/Alpine self-hosted, без CDN — Принцип III) у `crm/package.json`, `crm/vite.config.js`
-- [ ] T006 [P] Створити `crm/config/databridge.php` з параметрами: `offline_window` (~300s), `timestamp_tolerance` (±300s), `nonce_ttl` (600s), `heartbeat_interval` (~60s), rate-limits (proxy ~10/min, backend ~6/min), `max_body` (8 KiB)
-- [ ] T007 [P] Скелет WordPress-плагіна: `plugin/data-site.php` (нейтральна ідентичність «Данные сайта», префікс `sd_`/`SD_`, заголовок плагіна) + `plugin/readme.txt`
+- [x] T006 [P] Створити `crm/config/databridge.php` з параметрами: `offline_window` (~300s), `timestamp_tolerance` (±300s), `nonce_ttl` (600s), `heartbeat_interval` (~60s), rate-limits (proxy ~10/min, backend ~6/min), `max_body` (8 KiB)
+- [x] T007 [P] Скелет WordPress-плагіна: `plugin/data-site.php` (нейтральна ідентичність «Данные сайта», префікс `sd_`/`SD_`, заголовок плагіна) + `plugin/readme.txt`
 - [ ] T008 [P] Лінтери/стандарти: Laravel Pint у `crm/`; PHPCS + WordPress Coding Standards у `plugin/` (`plugin/phpcs.xml`)
 
 ---
@@ -49,16 +49,16 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 **⚠️ CRITICAL**: жодна user story не починається, доки ця фаза не завершена
 
-- [ ] T009 Міграції PostgreSQL у `crm/database/migrations/`: `sites`, `site_statuses` (1:1), `site_credentials`, `groups`+`site_group`, `event_log_entries`, `users`+`user_site_access` — з констрейнтами (UNIQUE `domain`, UNIQUE `site_identifier`, CHECK-enum статусів/станів) та індексами (частковий `(last_seen_at) WHERE status='online'`, `(status)`, частковий UNIQUE `(site_id) WHERE state='active'`) за `data-model.md`
-- [ ] T010 [P] Eloquent-моделі у `crm/app/Models/`: `Site`, `SiteStatus`, `SiteCredential`, `Group`, `EventLogEntry`, `User` — зв'язки, enum-касти, **encrypted-cast** для секрету (encrypted-at-rest, конституція v2.0.1)
-- [ ] T011 [P] `crm/app/Support/CanonicalRequest.php` — побудова канонічного рядка **байт-у-байт** за `contracts/ingest-contract.md` §1.2 (7 полів, включно з `site-id`)
-- [ ] T012 [P] `crm/app/Services/HmacVerifier.php` — переобчислення HMAC-SHA256 і **constant-time** порівняння (`hash_equals`)
-- [ ] T013 [P] `crm/app/Services/NonceStore.php` — Redis `SET NX EX 600` (анти-replay) + перевірка timestamp-вікна (±300s)
-- [ ] T014 [P] `crm/app/Services/EventLogger.php` — append-only запис у `event_log_entries` (хто/коли/тип/було→стало; **секрети ніколи не логуються**)
-- [ ] T015 [P] `crm/app/Services/CredentialService.php` — генерація публічного `site_identifier` (opaque high-entropy) + секрету (256-bit CSPRNG), encrypted-at-rest; методи issue/revoke/reissue (спільні для US1 і US4)
-- [ ] T016 Гейт автентифікації адмінки + обмеження **admin-only** (A-5) у `crm/app/Http/Middleware/EnsureAdmin.php` та `crm/routes/web.php` (стандартний логін, дизайн §11)
+- [x] T009 Міграції PostgreSQL у `crm/database/migrations/`: `sites`, `site_statuses` (1:1), `site_credentials`, `groups`+`site_group`, `event_log_entries`, `users`+`user_site_access` — з констрейнтами (UNIQUE `domain`, UNIQUE `site_identifier`, CHECK-enum статусів/станів) та індексами (частковий `(last_seen_at) WHERE status='online'`, `(status)`, частковий UNIQUE `(site_id) WHERE state='active'`) за `data-model.md`
+- [x] T010 [P] Eloquent-моделі у `crm/app/Models/`: `Site`, `SiteStatus`, `SiteCredential`, `Group`, `EventLogEntry`, `User` — зв'язки, enum-касти, **encrypted-cast** для секрету (encrypted-at-rest, конституція v2.0.1)
+- [x] T011 [P] `crm/app/Support/CanonicalRequest.php` — побудова канонічного рядка **байт-у-байт** за `contracts/ingest-contract.md` §1.2 (7 полів, включно з `site-id`)
+- [x] T012 [P] `crm/app/Services/HmacVerifier.php` — переобчислення HMAC-SHA256 і **constant-time** порівняння (`hash_equals`)
+- [x] T013 [P] `crm/app/Services/NonceStore.php` — Redis `SET NX EX 600` (анти-replay) + перевірка timestamp-вікна (±300s)
+- [x] T014 [P] `crm/app/Services/EventLogger.php` — append-only запис у `event_log_entries` (хто/коли/тип/було→стало; **секрети ніколи не логуються**)
+- [x] T015 [P] `crm/app/Services/CredentialService.php` — генерація публічного `site_identifier` (opaque high-entropy) + секрету (256-bit CSPRNG), encrypted-at-rest; методи issue/revoke/reissue (спільні для US1 і US4)
+- [x] T016 Гейт автентифікації адмінки + обмеження **admin-only** (A-5) у `crm/app/Http/Middleware/EnsureAdmin.php` та `crm/routes/web.php` (стандартний логін, дизайн §11)
 - [ ] T017 [P] Нейтральні відповіді про помилки (contract §2.4 — без топології/існування інших сайтів) у `crm/app/Exceptions/Handler.php`
-- [ ] T018 [P] Pest-фабрики у `crm/database/factories/` для `Site`, `SiteCredential`, `User`
+- [x] T018 [P] Pest-фабрики у `crm/database/factories/` для `Site`, `SiteCredential`, `User`
 
 **Checkpoint**: фундамент готовий — user stories можна починати (паралельно, якщо є ресурс)
 
@@ -72,17 +72,17 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 ### Tests for User Story 1 ⚠️
 
-- [ ] T019 [P] [US1] Feature-тест реєстрації (`201`, site-id + secret, статус `pending`) у `crm/tests/Feature/RegisterSiteTest.php`
-- [ ] T020 [P] [US1] Feature-тест дубля домену (`409`, без дубля — FR-006) у `crm/tests/Feature/RegisterSiteDuplicateTest.php`
-- [ ] T021 [P] [US1] Тест «секрет показується один раз» (далі маскований — FR-004) у `crm/tests/Feature/SecretShownOnceTest.php`
+- [x] T019 [P] [US1] Feature-тест реєстрації (`201`, site-id + secret, статус `pending`) у `crm/tests/Feature/RegisterSiteTest.php`
+- [x] T020 [P] [US1] Feature-тест дубля домену (`409`, без дубля — FR-006) у `crm/tests/Feature/RegisterSiteDuplicateTest.php`
+- [x] T021 [P] [US1] Тест «секрет показується один раз» (далі маскований — FR-004) у `crm/tests/Feature/SecretShownOnceTest.php`
 
 ### Implementation for User Story 1
 
-- [ ] T022 [P] [US1] `crm/app/Services/DomainNormalizer.php` — нормалізація домену (lowercase, зняття схеми/порту/слеша) перед UNIQUE-перевіркою (FR-006)
-- [ ] T023 [US1] `SiteController@register` (`POST /admin/sites`) у `crm/app/Http/Controllers/Admin/SiteController.php` — створює `site` (status `pending`), викликає `CredentialService::issue`, повертає `201` з `credentials` (секрет один раз) за contract §3.1 (залежить від T015, T022)
-- [ ] T024 [US1] Емісія подій `site_registered` + `token_issued` через `EventLogger` у `crm/app/Http/Controllers/Admin/SiteController.php` (register, FR-021)
+- [x] T022 [P] [US1] `crm/app/Services/DomainNormalizer.php` — нормалізація домену (lowercase, зняття схеми/порту/слеша) перед UNIQUE-перевіркою (FR-006)
+- [x] T023 [US1] `SiteController@register` (`POST /admin/sites`) у `crm/app/Http/Controllers/Admin/SiteController.php` — створює `site` (status `pending`), викликає `CredentialService::issue`, повертає `201` з `credentials` (секрет один раз) за contract §3.1 (залежить від T015, T022)
+- [x] T024 [US1] Емісія подій `site_registered` + `token_issued` через `EventLogger` у `crm/app/Http/Controllers/Admin/SiteController.php` (register, FR-021)
 - [ ] T025 [P] [US1] Blade-форма «Додати сайт» + показ одноразового секрету у `crm/resources/views/sites/create.blade.php`
-- [ ] T026 [US1] Маршрут реєстрації у `crm/routes/web.php` (під `EnsureAdmin`)
+- [x] T026 [US1] Маршрут реєстрації у `crm/routes/web.php` (під `EnsureAdmin`)
 
 **Checkpoint**: US1 повністю функціональна й тестована незалежно
 
@@ -111,10 +111,10 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 - [ ] T036 [US2] Планувальник `->command('sites:detect-offline')->everyMinute()->withoutOverlapping()` у `crm/routes/console.php`
 - [ ] T037 [US2] Backend rate-limit (2-й контур) per `site-id` у `crm/app/Http/Middleware/ThrottleBySiteId.php` (FR-026)
 - [ ] T038 [US2] Маршрут heartbeat + throttle у `crm/routes/api.php`
-- [ ] T039 [P] [US2] Плагін: `plugin/includes/class-sd-signer.php` — канонічний рядок (**дзеркало** contract §1) + `hash_hmac('sha256', …)`, nonce `random_bytes` (base64url)
-- [ ] T040 [P] [US2] Плагін: `plugin/includes/class-sd-settings.php` — Options API (`sd_site_id`, `sd_signing_secret` [autoload=no, показ один раз], `sd_endpoint_url`); санітизація/ескейпінг/нонси; жодних захардкоджених адрес (FR-024)
-- [ ] T041 [US2] Плагін: `plugin/includes/class-sd-heartbeat.php` — WP-Cron ~60s → підпис → `wp_remote_post` на `sd_endpoint_url`; читає лише статус-код (залежить від T039, T040)
-- [ ] T042 [P] [US2] Плагін: вкладка «Подключение» (статус, показ/сховати токен, «Проверить соединение» — **нейтральні** повідомлення) + документація системного cron у `plugin/includes/class-sd-admin.php`
+- [x] T039 [P] [US2] Плагін: `plugin/includes/class-sd-signer.php` — канонічний рядок (**дзеркало** contract §1) + `hash_hmac('sha256', …)`, nonce `random_bytes` (base64url)
+- [x] T040 [P] [US2] Плагін: `plugin/includes/class-sd-settings.php` — Options API (`sd_site_id`, `sd_signing_secret` [autoload=no, показ один раз], `sd_endpoint_url`); санітизація/ескейпінг/нонси; жодних захардкоджених адрес (FR-024)
+- [x] T041 [US2] Плагін: `plugin/includes/class-sd-heartbeat.php` — WP-Cron ~60s → підпис → `wp_remote_post` на `sd_endpoint_url`; читає лише статус-код (залежить від T039, T040)
+- [x] T042 [P] [US2] Плагін: вкладка «Подключение» (статус, показ/сховати токен, «Проверить соединение» — **нейтральні** повідомлення) + документація системного cron у `plugin/includes/class-sd-admin.php`
 
 **Checkpoint**: US1 і US2 працюють незалежно; сайти звітують і бачаться online/offline
 
