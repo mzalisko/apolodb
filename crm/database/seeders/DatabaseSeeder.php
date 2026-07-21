@@ -12,7 +12,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::firstOrCreate(
+        $admin = User::firstOrCreate(
             ['email' => 'admin@databridge.local'],
             [
                 'name' => 'Адміністратор',
@@ -56,6 +56,15 @@ class DatabaseSeeder extends Seeder
             foreach ($subs as [$sName, $sDomain, $sStatus, $sLastSeen]) {
                 $this->makeSite($sName, $sDomain, $sStatus, $sLastSeen, $site->id);
             }
+        }
+
+        // Демо-обране адміна — точно як на скріншоті дизайну (сайдбар «Обране»).
+        $favDomains = ['remont-technika.com.ua', 'prokat-avto.ua', 'yur-consult.com.ua'];
+        $favSiteIds = Site::whereIn('domain', $favDomains)->pluck('id')->all();
+        $admin->favoriteSites()->syncWithoutDetaching($favSiteIds);
+
+        if ($topGroup = ($groups['Топ'] ?? null)) {
+            $admin->favoriteGroups()->syncWithoutDetaching([$topGroup->id]);
         }
     }
 

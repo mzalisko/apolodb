@@ -1,4 +1,6 @@
-@php($siteCount = \App\Models\Site::count())
+@php
+    $siteCount = \App\Models\Site::count();
+@endphp
 <!doctype html>
 <html lang="uk" data-theme="dark">
 <head>
@@ -47,9 +49,52 @@
             </a>
         </nav>
 
+        @php
+            $me = auth()->user();
+            $favSites = $me ? $me->favoriteSites()->whereNull('parent_site_id')->with('subdomains')->orderBy('name')->get() : collect();
+            $favGroups = $me ? $me->favoriteGroups()->withCount('sites')->orderBy('name')->get() : collect();
+        @endphp
         <div class="side-label">Обране</div>
         <div class="fav">
-            <div class="fav-empty">Позначайте сайти ★ у списку, а групи — кнопкою «☆ Група» біля фільтра.</div>
+            @forelse($favSites as $fs)
+                <div style="display:flex;flex-direction:column">
+                    <a href="/admin/sites/{{ $fs->id }}/credentials"
+                       style="display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;color:var(--text-dim);font-size:12px;text-decoration:none">
+                        <span style="width:5px;height:5px;border-radius:50%;background:var(--accent);flex-shrink:0"></span>
+                        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-family:'IBM Plex Mono';font-size:11px">{{ $fs->domain }}</span>
+                        @if($fs->subdomains->count())
+                            <span style="font-family:'IBM Plex Mono';font-size:10px;color:var(--text-faint)">+{{ $fs->subdomains->count() }}</span>
+                        @endif
+                    </a>
+                    @foreach($fs->subdomains as $sub)
+                        <a href="/admin/sites/{{ $sub->id }}/credentials"
+                           style="display:flex;align-items:center;gap:7px;padding:4px 8px 4px 21px;border-radius:6px;color:var(--text-faint);font-size:11.5px;text-decoration:none">
+                            <span style="font-size:10px">└</span><span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $sub->name }}</span>
+                        </a>
+                    @endforeach
+                </div>
+            @empty
+            @endforelse
+
+            @if($favGroups->count())
+                <div style="padding:10px 8px 4px;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-faint)">Обрані групи</div>
+                @foreach($favGroups as $fg)
+                    <div style="display:flex;align-items:center;border-radius:6px">
+                        <a href="/admin?group={{ urlencode($fg->name) }}"
+                           style="flex:1;display:flex;align-items:center;gap:8px;padding:6px 4px 6px 8px;color:var(--text-dim);font-size:12px;min-width:0;text-decoration:none">
+                            <span style="width:13px;height:13px;color:var(--accent);display:flex;flex-shrink:0"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg></span>
+                            <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ $fg->name }}</span>
+                            <span style="font-family:'IBM Plex Mono';font-size:10px;padding:1px 6px;border-radius:5px;background:var(--surface-3);color:var(--text-faint);flex-shrink:0">{{ $fg->sites_count }} сайти</span>
+                        </a>
+                        <button type="button" title="Прибрати з обраного" onclick="dbToggleGroupFav({{ $fg->id }}, this)"
+                                style="background:transparent;border:0;color:var(--accent);cursor:pointer;font-size:12px;padding:4px 8px;flex-shrink:0">★</button>
+                    </div>
+                @endforeach
+            @endif
+
+            @if($favSites->isEmpty() && $favGroups->isEmpty())
+                <div class="fav-empty">Позначайте сайти ★ у списку, а групи — кнопкою «☆ Група» біля фільтра.</div>
+            @endif
         </div>
 
         <div class="side-foot">
@@ -213,6 +258,16 @@
     document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') closeAddSite();
     });
+
+    // ── Обране (сайт / група) ──
+    function dbToggleFav(id) {
+        fetch('/admin/sites/' + id + '/favorite', { method: 'POST', headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+            .then(function (r) { return r.json(); }).then(function () { location.reload(); });
+    }
+    function dbToggleGroupFav(id) {
+        fetch('/admin/groups/' + id + '/favorite', { method: 'POST', headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+            .then(function (r) { return r.json(); }).then(function () { location.reload(); });
+    }
 </script>
 </body>
 </html>

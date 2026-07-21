@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\AuthController;
 use App\Http\Middleware\EnsureAdmin;
+use App\Models\Group;
 use App\Models\Site;
 use Illuminate\Support\Facades\Route;
 
@@ -27,4 +28,6 @@ Route::middleware(EnsureAdmin::class)->prefix('admin')->group(function () {
     Route::post('/sites/{site}/reactivate', [SiteController::class, 'reactivate']);   // §3.4 US3
     Route::post('/sites/{site}/credentials/revoke', [SiteController::class, 'revokeCredential']);   // §3.2 US4
     Route::post('/sites/{site}/credentials/reissue', [SiteController::class, 'reissueCredential']); // §3.2 US4
+    Route::post('/sites/{site}/favorite', [SiteController::class, 'toggleFavorite']);               // Обране (сайт)
+    Route::post('/groups/{group}/favorite', [SiteController::class, 'toggleGroupFavorite']);        // Обране (група)
 });

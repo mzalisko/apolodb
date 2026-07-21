@@ -132,11 +132,16 @@ class SiteController extends Controller
         ];
 
         if (! $request->wantsJson()) {
+            $groupModel = $group ? Group::where('name', $group)->first() : null;
+
             return response()->view('sites.index', [
                 'payload' => $payload,
                 'filter' => $filter,
                 'group' => $group,
+                'groupId' => $groupModel?->id,
                 'groups' => Group::orderBy('name')->pluck('name')->all(),
+                'favoriteIds' => $request->user()?->favoriteSites()->pluck('sites.id')->all() ?? [],
+                'favoriteGroup' => $groupModel && $request->user()?->favoriteGroups()->whereKey($groupModel->id)->exists(),
             ]);
         }
 
@@ -214,5 +219,27 @@ class SiteController extends Controller
             ],
             'previous_token_state' => 'revoked',
         ], 201);
+    }
+
+    /** Перемкнути «обране» для сайту (per-user). design brief §1. */
+    public function toggleFavorite(Request $request, Site $site): JsonResponse
+    {
+        $user = $request->user();
+        $isFav = $user->favoriteSites()->whereKey($site->id)->exists();
+
+        $isFav ? $user->favoriteSites()->detach($site->id) : $user->favoriteSites()->attach($site->id);
+
+        return response()->json(['favorite' => ! $isFav]);
+    }
+
+    /** Перемкнути «обране» для групи (per-user). */
+    public function toggleGroupFavorite(Request $request, Group $group): JsonResponse
+    {
+        $user = $request->user();
+        $isFav = $user->favoriteGroups()->whereKey($group->id)->exists();
+
+        $isFav ? $user->favoriteGroups()->detach($group->id) : $user->favoriteGroups()->attach($group->id);
+
+        return response()->json(['favorite' => ! $isFav]);
     }
 }

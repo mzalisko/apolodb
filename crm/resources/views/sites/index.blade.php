@@ -17,6 +17,12 @@
                     style="padding:5px 11px;border-radius:7px;border:0;cursor:pointer;font:inherit;font-size:12.5px;font-weight:500;background:transparent;color:var(--text-dim)">★ Обране</button>
         </div>
 
+        @if($group && $groupId)
+            <button type="button" title="{{ $favoriteGroup ? 'Прибрати групу з обраного' : 'Додати групу в обране' }}"
+                    onclick="dbToggleGroupFav({{ $groupId }})"
+                    style="padding:8px 12px;border-radius:9px;font:inherit;font-size:12.5px;cursor:pointer;border:1px solid {{ $favoriteGroup ? 'var(--accent)' : 'var(--border)' }};background:{{ $favoriteGroup ? 'var(--accent-dim)' : 'var(--surface)' }};color:{{ $favoriteGroup ? 'var(--accent)' : 'var(--text-dim)' }}">{{ $favoriteGroup ? '★' : '☆' }} Група</button>
+        @endif
+
         {{-- Групи --}}
         <label style="position:relative;display:flex;margin:0">
             <select onchange="dbFilter('group', this.value)" style="{{ $sel }}">
@@ -75,9 +81,12 @@
         @forelse($payload['sites'] as $site)
             <div>
                 {{-- основний сайт --}}
+                @php $isFav = in_array($site['id'], $favoriteIds); @endphp
                 <a class="row-hover" href="/admin/sites/{{ $site['id'] }}/credentials"
                    style="display:grid;grid-template-columns:26px 2.4fr 1fr 1fr 40px;align-items:center;padding:var(--row-pad);border-bottom:1px solid var(--border);cursor:pointer;color:inherit;text-decoration:none">
-                    <button class="star" type="button" onclick="event.preventDefault();event.stopPropagation()">★</button>
+                    <button class="star" type="button" title="{{ $isFav ? 'Прибрати з обраного' : 'Додати в обране' }}"
+                            style="color:{{ $isFav ? 'var(--accent)' : 'var(--text-faint)' }}"
+                            onclick="event.preventDefault();event.stopPropagation();dbToggleFav({{ $site['id'] }})">★</button>
                     <div style="display:flex;flex-direction:column;gap:1px;min-width:0">
                         <span style="font-weight:600;font-size:13px">{{ $site['name'] }}</span>
                         <span style="font-family:'IBM Plex Mono';font-size:11px;color:var(--text-dim)">{{ $site['domain'] }}</span>
