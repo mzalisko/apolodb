@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
+        api: __DIR__.'/../routes/api.php',
+        apiPrefix: '',   // heartbeat лишається на /v1/heartbeat (без /api)
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
@@ -22,6 +24,17 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(
-            fn (Request $request) => $request->is('api/*'),
+            fn (Request $request) => $request->is('api/*') || $request->is('v1/*') || $request->is('admin/*'),
         );
+
+        // T017: нейтральні відповіді на v1/* (heartbeat) — без розкриття топології (§2.4, FR-019/FR-032).
+        $exceptions->render(function (\Throwable $e, Request $request) {
+            if ($request->is('v1/*')) {
+                $status = $e instanceof \Symfony\Component\HttpKernel\Exception\HttpExceptionInterface
+                    ? $e->getStatusCode()
+                    : 500;
+
+                return response()->json(['error' => 'request_rejected', 'message' => 'Запит відхилено.'], $status);
+            }
+        });
     })->create();

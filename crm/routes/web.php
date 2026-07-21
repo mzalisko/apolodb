@@ -10,6 +10,7 @@ Route::get('/', function () {
 
 /*
  * CRM-internal admin операції (contract §3). Лише авторизовані оператори (FR-022).
+ * Session-cookie + EnsureAdmin; CSRF-виняток для admin/* (JSON API) у bootstrap/app.php.
  */
 Route::middleware(EnsureAdmin::class)->prefix('admin')->group(function () {
     Route::post('/sites', [SiteController::class, 'register']);           // §3.1 US1

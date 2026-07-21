@@ -57,7 +57,7 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 - [x] T014 [P] `crm/app/Services/EventLogger.php` — append-only запис у `event_log_entries` (хто/коли/тип/було→стало; **секрети ніколи не логуються**)
 - [x] T015 [P] `crm/app/Services/CredentialService.php` — генерація публічного `site_identifier` (opaque high-entropy) + секрету (256-bit CSPRNG), encrypted-at-rest; методи issue/revoke/reissue (спільні для US1 і US4)
 - [x] T016 Гейт автентифікації адмінки + обмеження **admin-only** (A-5) у `crm/app/Http/Middleware/EnsureAdmin.php` та `crm/routes/web.php` (стандартний логін, дизайн §11)
-- [ ] T017 [P] Нейтральні відповіді про помилки (contract §2.4 — без топології/існування інших сайтів) у `crm/app/Exceptions/Handler.php`
+- [x] T017 [P] Нейтральні відповіді про помилки (contract §2.4 — без топології/існування інших сайтів) у `crm/app/Exceptions/Handler.php`
 - [x] T018 [P] Pest-фабрики у `crm/database/factories/` для `Site`, `SiteCredential`, `User`
 
 **Checkpoint**: фундамент готовий — user stories можна починати (паралельно, якщо є ресурс)
@@ -96,21 +96,21 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 ### Tests for User Story 2 ⚠️
 
-- [ ] T027 [P] [US2] Feature-тест приймання валідного heartbeat (`202`, upsert `online`) у `crm/tests/Feature/HeartbeatAcceptTest.php`
-- [ ] T028 [P] [US2] Тест відхилення неавтентифікованих/невалідний підпис/невідомий site-id/відкликаний (`401/403`, статус без змін — SC-004) у `crm/tests/Feature/HeartbeatRejectTest.php`
-- [ ] T029 [P] [US2] Тест анти-replay (повтор nonce / timestamp поза вікном → відхилено — SC-005) у `crm/tests/Feature/HeartbeatReplayTest.php`
-- [ ] T030 [P] [US2] Unit-тест `HmacVerifier` + `CanonicalRequest` (constant-time; байт-точний канонік) у `crm/tests/Unit/HmacVerifierTest.php`
-- [ ] T031 [P] [US2] Тест ідемпотентності upsert (повтори/гонки → latest-wins без дублів) у `crm/tests/Feature/HeartbeatIdempotentTest.php`
-- [ ] T032 [P] [US2] Тест детектора офлайну (перехід `online→offline` рівно після вікна від `last_seen_at` — SC-003) у `crm/tests/Feature/DetectOfflineTest.php`
+- [x] T027 [P] [US2] Feature-тест приймання валідного heartbeat (`202`, upsert `online`) у `crm/tests/Feature/HeartbeatAcceptTest.php`
+- [x] T028 [P] [US2] Тест відхилення неавтентифікованих/невалідний підпис/невідомий site-id/відкликаний (`401/403`, статус без змін — SC-004) у `crm/tests/Feature/HeartbeatRejectTest.php`
+- [x] T029 [P] [US2] Тест анти-replay (повтор nonce / timestamp поза вікном → відхилено — SC-005) у `crm/tests/Feature/HeartbeatReplayTest.php`
+- [x] T030 [P] [US2] Unit-тест `HmacVerifier` + `CanonicalRequest` (constant-time; байт-точний канонік) у `crm/tests/Unit/HmacVerifierTest.php`
+- [x] T031 [P] [US2] Тест ідемпотентності upsert (повтори/гонки → latest-wins без дублів) у `crm/tests/Feature/HeartbeatIdempotentTest.php`
+- [x] T032 [P] [US2] Тест детектора офлайну (перехід `online→offline` рівно після вікна від `last_seen_at` — SC-003) у `crm/tests/Feature/DetectOfflineTest.php`
 
 ### Implementation for User Story 2
 
-- [ ] T033 [US2] `HeartbeatController` (`POST /v1/heartbeat`) у `crm/app/Http/Controllers/HeartbeatController.php` — рівень-2 верифікація (lookup `site-id` → `active` → HMAC → timestamp → nonce) → dispatch job → `202` (FR-007/010/011/028; залежить від T011–T013)
-- [ ] T034 [US2] `ProcessHeartbeat` job у `crm/app/Jobs/ProcessHeartbeat.php` — ідемпотентний upsert `site_statuses` (`online`, `last_seen_at`), оновлення `credential.last_used_at`, емісія `status_changed` на транзиції
-- [ ] T035 [US2] Команда `sites:detect-offline` у `crm/app/Console/Commands/DetectOffline.php` — set-based UPDATE `online→offline` (`last_seen_at < now-offline_window`) + емісія подій (FR-014)
-- [ ] T036 [US2] Планувальник `->command('sites:detect-offline')->everyMinute()->withoutOverlapping()` у `crm/routes/console.php`
-- [ ] T037 [US2] Backend rate-limit (2-й контур) per `site-id` у `crm/app/Http/Middleware/ThrottleBySiteId.php` (FR-026)
-- [ ] T038 [US2] Маршрут heartbeat + throttle у `crm/routes/api.php`
+- [x] T033 [US2] `HeartbeatController` (`POST /v1/heartbeat`) у `crm/app/Http/Controllers/HeartbeatController.php` — рівень-2 верифікація (lookup `site-id` → `active` → HMAC → timestamp → nonce) → dispatch job → `202` (FR-007/010/011/028; залежить від T011–T013)
+- [x] T034 [US2] `ProcessHeartbeat` job у `crm/app/Jobs/ProcessHeartbeat.php` — ідемпотентний upsert `site_statuses` (`online`, `last_seen_at`), оновлення `credential.last_used_at`, емісія `status_changed` на транзиції
+- [x] T035 [US2] Команда `sites:detect-offline` у `crm/app/Console/Commands/DetectOffline.php` — set-based UPDATE `online→offline` (`last_seen_at < now-offline_window`) + емісія подій (FR-014)
+- [x] T036 [US2] Планувальник `->command('sites:detect-offline')->everyMinute()->withoutOverlapping()` у `crm/routes/console.php`
+- [x] T037 [US2] Backend rate-limit (2-й контур) per `site-id` у `crm/app/Http/Middleware/ThrottleBySiteId.php` (FR-026)
+- [x] T038 [US2] Маршрут heartbeat + throttle у `crm/routes/api.php`
 - [x] T039 [P] [US2] Плагін: `plugin/includes/class-sd-signer.php` — канонічний рядок (**дзеркало** contract §1) + `hash_hmac('sha256', …)`, nonce `random_bytes` (base64url)
 - [x] T040 [P] [US2] Плагін: `plugin/includes/class-sd-settings.php` — Options API (`sd_site_id`, `sd_signing_secret` [autoload=no, показ один раз], `sd_endpoint_url`); санітизація/ескейпінг/нонси; жодних захардкоджених адрес (FR-024)
 - [x] T041 [US2] Плагін: `plugin/includes/class-sd-heartbeat.php` — WP-Cron ~60s → підпис → `wp_remote_post` на `sd_endpoint_url`; читає лише статус-код (залежить від T039, T040)
