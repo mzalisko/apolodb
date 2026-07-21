@@ -42,13 +42,15 @@
   backend). Added as FR-023..FR-033, a Key Entity, and a Dependencies entry. **No open questions
   remain** for this feature. An adversarial verify pass caught and fixed a flaw in the draft
   (proxy-side HMAC verification would have leaked all per-site secrets on proxy compromise).
-- **⚠️ Constitution vs. design conflict (flagged for user)**: Constitution v1.0.0 Principle IV
-  enshrines "site failover to a backup node" as the highest-priority path, but the 2026-07-21
-  clarification confirms that concept does not exist. Recorded under the spec's **Dependencies**;
-  recommend amending the constitution (`/speckit.constitution`) to reconcile.
+- **✅ Constitution reconciled (v2.0.0, 2026-07-21)**: Principle IV reformulated (failover exception
+  removed) and the Security section amended for the proxy (TLS on both legs, defense-in-depth,
+  per-site secrets stay on the backend). No constitution↔spec conflict remains. Committed to
+  `apolodb` as `e7ef836`.
+- **Interactive clarify 2026-07-21 (2 Q)**: Heartbeat interval **~1 min**, offline after **3 misses
+  (~5 min)** — pins A-2 and SC-002/SC-003. Per-site auth = **separate public site-id + secret HMAC
+  key** (not a single token) — pins A-4, FR-002/003/004 and the Site Credentials entity.
 - **Deliberately referenced constraints**: `TLS`, `queue (async)`, and `HMAC + timestamp` appear as
   named constraints because they are mandated by the constitution (Principles II/IV, Security) and by
   the user's explicit request — captured as constraints/assumptions (A-4), while Success Criteria are
   kept technology-agnostic. These are not leaked implementation choices.
-- **Recommendation**: Proceed to `/speckit.plan` (OQ-4 can be decided during planning), or run
-  `/speckit.constitution` first to resolve the Principle IV conflict.
+- **Recommendation**: All open questions resolved; spec is **ready for `/speckit.plan`**.
