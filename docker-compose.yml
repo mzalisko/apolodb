@@ -8,6 +8,7 @@ services:
       dockerfile: docker/app.Dockerfile
     volumes:
       - ./crm:/app
+      - ./plugin:/plugin:ro   # реальний код плагіна для інтеграційного тесту (plugin↔CRM)
     working_dir: /app
     depends_on:
       pgsql:
