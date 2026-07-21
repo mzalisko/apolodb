@@ -80,6 +80,9 @@ class SiteController extends Controller
     {
         $filter = $request->query('status');
         $group = $request->query('group');
+        $view = in_array($request->query('view'), ['list', 'tiles', 'groups'], true) ? $request->query('view') : 'list';
+        $favOnly = $request->boolean('fav');
+        $favoriteIds = $request->user()?->favoriteSites()->pluck('sites.id')->all() ?? [];
         $perPage = max(1, (int) $request->query('per_page', 50));
         $page = max(1, (int) $request->query('page', 1));
 
@@ -99,7 +102,10 @@ class SiteController extends Controller
         if ($group) {
             $query->whereHas('groups', fn ($q) => $q->where('name', $group));
         }
-        $filtered = ($filter || $group) ? (int) (clone $query)->count() : $total;
+        if ($favOnly) {
+            $query->whereIn('id', $favoriteIds ?: [0]);   // лише обране; [0] → порожньо, якщо обраних нема
+        }
+        $filtered = ($filter || $group || $favOnly) ? (int) (clone $query)->count() : $total;
 
         $sites = $query->orderBy('name')->forPage($page, $perPage)->get();
 
@@ -140,8 +146,10 @@ class SiteController extends Controller
                 'group' => $group,
                 'groupId' => $groupModel?->id,
                 'groups' => Group::orderBy('name')->pluck('name')->all(),
-                'favoriteIds' => $request->user()?->favoriteSites()->pluck('sites.id')->all() ?? [],
+                'favoriteIds' => $favoriteIds,
                 'favoriteGroup' => $groupModel && $request->user()?->favoriteGroups()->whereKey($groupModel->id)->exists(),
+                'view' => $view,
+                'favOnly' => $favOnly,
             ]);
         }
 
