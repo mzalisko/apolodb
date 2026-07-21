@@ -30,4 +30,7 @@ Route::middleware(EnsureAdmin::class)->prefix('admin')->group(function () {
     Route::post('/sites/{site}/credentials/reissue', [SiteController::class, 'reissueCredential']); // §3.2 US4
     Route::post('/sites/{site}/favorite', [SiteController::class, 'toggleFavorite']);               // Обране (сайт)
     Route::post('/groups/{group}/favorite', [SiteController::class, 'toggleGroupFavorite']);        // Обране (група)
+    Route::get('/groups/data', [SiteController::class, 'groupsData']);                              // дані модалки «Групи»
+    Route::post('/groups', [SiteController::class, 'createGroup']);                                 // створити групу
+    Route::post('/sites/{site}/groups/{group}/toggle', [SiteController::class, 'toggleSiteGroup']); // членство сайту в групі
 });

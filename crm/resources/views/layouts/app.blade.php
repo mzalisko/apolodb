@@ -137,7 +137,8 @@
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
             </button>
             <button class="btn disabled" type="button">Масові зміни</button>
-            <button class="btn disabled" type="button">Групи</button>
+            <button class="btn" type="button" onclick="openGroupManager()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg>Групи</button>
             <button class="btn btn-accent" type="button" onclick="openAddSite()">+ Додати сайт</button>
         </header>
 
@@ -195,6 +196,44 @@
                 <div style="flex:1"></div>
                 <button type="button" onclick="location.href='/admin'" style="padding:9px 18px;background:var(--accent-btn);border:0;border-radius:8px;color:var(--on-accent);font:inherit;font-weight:600;cursor:pointer;font-size:12.5px">Готово</button>
             </div>
+        </div>
+    </div>
+</div>
+
+{{-- ── Модалка «Групи сайтів» (design/CRM v2.dc.html · рядок 1160) ── --}}
+<div id="grpOverlay" onclick="if(event.target===this)closeGroupManager()"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:56;align-items:center;justify-content:center;padding:30px">
+    <div style="width:520px;max-height:100%;overflow:auto;background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;box-shadow:0 30px 70px rgba(0,0,0,.5)">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--border)">
+            <div style="font-weight:700;font-size:16px">Групи сайтів</div>
+            <div style="font-size:12.5px;color:var(--text-dim);margin-top:3px">Створіть групу або додайте наявні сайти до неї. Сайт може бути в кількох групах.</div>
+        </div>
+        <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
+            <div>
+                <label style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0 0 8px">Група</label>
+                <div style="display:flex;gap:8px;margin-bottom:8px">
+                    <input id="grpNewName" type="text" placeholder="Знайти або створити групу…" oninput="grpRenderChips()"
+                           onkeydown="if(event.key==='Enter'){event.preventDefault();grpCreate();}"
+                           style="flex:1;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:12.5px;outline:none">
+                    <button type="button" onclick="grpCreate()" style="padding:8px 13px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:8px;color:var(--text);font:inherit;cursor:pointer;font-size:12px">Створити</button>
+                </div>
+                <div id="grpChips" style="display:flex;gap:6px;flex-wrap:wrap;max-height:104px;overflow:auto"></div>
+                <div id="grpChipsMore" style="font-size:11px;color:var(--text-faint);margin-top:6px;display:none"></div>
+            </div>
+            <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+                    <label style="font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0">Сайти в групі «<span id="grpActiveName">—</span>»</label>
+                    <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint)"><span id="grpMemberCount">0</span> обрано</span>
+                </div>
+                <input id="grpSearch" type="text" oninput="grpRenderSites()" placeholder="Пошук сайту…"
+                       style="width:100%;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:12.5px;outline:none;margin-bottom:8px">
+                <div id="grpSiteList" style="max-height:200px;overflow:auto;border:1px solid var(--border);border-radius:9px;background:var(--bg)"></div>
+            </div>
+        </div>
+        <div style="padding:15px 22px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px">
+            <span style="font-size:12px;color:var(--text-dim)">Зміни застосовуються одразу</span>
+            <div style="flex:1"></div>
+            <button type="button" onclick="closeGroupManager()" style="padding:9px 18px;background:var(--accent-btn);border:0;border-radius:8px;color:var(--on-accent);font:inherit;font-weight:600;cursor:pointer;font-size:12.5px">Готово</button>
         </div>
     </div>
 </div>
@@ -268,6 +307,97 @@
         fetch('/admin/groups/' + id + '/favorite', { method: 'POST', headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
             .then(function (r) { return r.json(); }).then(function () { location.reload(); });
     }
+
+    // ── Менеджер груп ──
+    var dbGrp = { groups: [], sites: [], active: null, changed: false };
+    function openGroupManager() {
+        document.getElementById('grpOverlay').style.display = 'flex';
+        fetch('/admin/groups/data', { headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+            .then(function (r) { return r.json(); }).then(function (d) {
+                dbGrp.groups = d.groups; dbGrp.sites = d.sites;
+                dbGrp.active = dbGrp.groups.length ? dbGrp.groups[0].id : null;
+                grpRenderChips(); grpRenderSites();
+            });
+    }
+    function closeGroupManager() {
+        document.getElementById('grpOverlay').style.display = 'none';
+        if (dbGrp.changed) location.reload();   // оновити список/сайдбар під нові групи
+    }
+    // Масштабовано: рендеримо лише збіги пошуку, з лімітом (не 100+ чипів одразу).
+    function grpRenderChips() {
+        var el = document.getElementById('grpChips'); el.innerHTML = '';
+        var raw = document.getElementById('grpNewName').value || '';
+        var q = raw.toLowerCase();
+        var CAP = 40;
+        var matched = dbGrp.groups.filter(function (g) { return !q || g.name.toLowerCase().indexOf(q) !== -1; });
+        var shown = matched.slice(0, CAP);
+        var ag = dbGrp.groups.filter(function (g) { return g.id === dbGrp.active; })[0];
+        if (ag && !shown.some(function (g) { return g.id === dbGrp.active; }) && (!q || ag.name.toLowerCase().indexOf(q) !== -1)) shown.unshift(ag);
+        shown.forEach(function (g) {
+            var active = g.id === dbGrp.active;
+            var b = document.createElement('button');
+            b.type = 'button'; b.textContent = g.name;
+            b.style.cssText = 'padding:6px 11px;border-radius:8px;cursor:pointer;font:inherit;font-size:12px;border:1px solid '
+                + (active ? 'var(--accent)' : 'var(--border)') + ';background:' + (active ? 'var(--accent-dim)' : 'var(--bg)')
+                + ';color:' + (active ? 'var(--accent)' : 'var(--text-dim)');
+            b.onclick = function () { dbGrp.active = g.id; grpRenderChips(); grpRenderSites(); };
+            el.appendChild(b);
+        });
+        var more = document.getElementById('grpChipsMore');
+        var hidden = matched.length - Math.min(matched.length, CAP);
+        if (matched.length === 0 && q) { more.textContent = 'Немає групи «' + raw.trim() + '» — натисніть «Створити».'; more.style.display = 'block'; }
+        else if (hidden > 0) { more.textContent = '…ще ' + hidden + ' груп — уточніть пошук.'; more.style.display = 'block'; }
+        else { more.style.display = 'none'; }
+        document.getElementById('grpActiveName').textContent = ag ? ag.name : '—';
+    }
+    function grpRenderSites() {
+        var list = document.getElementById('grpSiteList'); list.innerHTML = '';
+        var q = (document.getElementById('grpSearch').value || '').toLowerCase();
+        var count = 0;
+        dbGrp.sites.forEach(function (s) {
+            var inGroup = dbGrp.active && s.groups.indexOf(dbGrp.active) !== -1;
+            if (inGroup) count++;
+            if (q && s.name.toLowerCase().indexOf(q) === -1 && s.domain.toLowerCase().indexOf(q) === -1) return;
+            var label = document.createElement('label');
+            label.style.cssText = 'display:flex;align-items:center;gap:10px;padding:7px 11px;border-bottom:1px solid var(--border);cursor:pointer;' + (inGroup ? 'background:var(--accent-dim)' : '');
+            var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!inGroup; cb.disabled = !dbGrp.active;
+            cb.style.cssText = 'cursor:pointer;accent-color:var(--accent)';
+            cb.onchange = function () { grpToggle(s, dbGrp.active); };
+            var nm = document.createElement('span'); nm.textContent = s.name;
+            nm.style.cssText = 'flex:1;font-size:12.5px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+            var dm = document.createElement('span'); dm.textContent = s.domain;
+            dm.style.cssText = 'font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint)';
+            label.appendChild(cb); label.appendChild(nm); label.appendChild(dm);
+            list.appendChild(label);
+        });
+        if (!list.children.length) { list.innerHTML = '<div style="padding:14px;font-size:11.5px;color:var(--text-faint);text-align:center">Нічого не знайдено.</div>'; }
+        document.getElementById('grpMemberCount').textContent = count;
+    }
+    function grpToggle(s, groupId) {
+        if (!groupId) return;
+        fetch('/admin/sites/' + s.id + '/groups/' + groupId + '/toggle', { method: 'POST', headers: { 'Accept': 'application/json' }, credentials: 'same-origin' })
+            .then(function (r) { return r.json(); }).then(function (res) {
+                dbGrp.changed = true;
+                var idx = s.groups.indexOf(groupId);
+                if (res.member && idx === -1) s.groups.push(groupId);
+                if (!res.member && idx !== -1) s.groups.splice(idx, 1);
+                grpRenderSites();
+            });
+    }
+    function grpCreate() {
+        var input = document.getElementById('grpNewName');
+        var name = input.value.trim();
+        if (!name) return;
+        fetch('/admin/groups', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ name: name }) })
+            .then(function (r) { return r.json(); }).then(function (g) {
+                dbGrp.changed = true; input.value = '';
+                if (!dbGrp.groups.filter(function (x) { return x.id === g.id; }).length) dbGrp.groups.push(g);
+                dbGrp.groups.sort(function (a, b) { return a.name.localeCompare(b.name, 'uk'); });
+                dbGrp.active = g.id;
+                grpRenderChips(); grpRenderSites();
+            });
+    }
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGroupManager(); });
 </script>
 </body>
 </html>

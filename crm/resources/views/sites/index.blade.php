@@ -10,6 +10,7 @@
         $sel = 'padding:8px 30px 8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);font:inherit;font-size:12.5px;cursor:pointer;min-width:120px;-webkit-appearance:none;appearance:none';
         $arrow = '<span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-faint);font-size:9px">▼</span>';
         $favSet = array_flip($favoriteIds);
+        $favGroupSet = array_flip($favoriteGroupIds);
         // Блоки для режиму «Групи»: групуємо (вже відфільтровані) сайти за назвою групи.
         $groupBlocks = [];
         foreach ($payload['sites'] as $s) {
@@ -117,8 +118,18 @@
                         <div style="flex:1"></div>
                         <span style="width:6px;height:6px;border-radius:50%;background:{{ $dot[$s['status']] ?? 'var(--text-faint)' }}"></span>
                         <span style="font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim)">
-                            @php $ls = $s['last_seen_at'] ? \Illuminate\Support\Carbon::parse($s['last_seen_at']) : null; @endphp
-                            {{ $ls ? ($ls->diffInSeconds() < 60 ? 'щойно' : ($ls->diffInMinutes() < 60 ? $ls->diffInMinutes().' хв тому' : $ls->diffInHours().' год тому')) : 'ще не звітував' }}
+                            @php
+                                $ls = $s['last_seen_at'] ? \Illuminate\Support\Carbon::parse($s['last_seen_at']) : null;
+                                $lsText = 'ще не звітував';
+                                if ($ls) {
+                                    $sec = $ls->diffInSeconds();
+                                    $lsText = $sec < 60 ? 'щойно'
+                                        : ($sec < 3600 ? intdiv($sec, 60).' хв тому'
+                                        : ($sec < 86400 ? intdiv($sec, 3600).' год тому'
+                                        : intdiv($sec, 86400).' дн тому'));
+                                }
+                            @endphp
+                            {{ $lsText }}
                         </span>
                     </div>
                 </a>
@@ -132,12 +143,17 @@
         <div style="display:flex;flex-direction:column;gap:10px">
             @forelse($groupBlocks as $gname => $gsites)
                 <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)">
-                    <div style="display:flex;align-items:center;gap:11px;padding:12px 15px;background:var(--surface-2)">
+                    @php $gid = $groupIdByName[$gname] ?? null; $gfav = $gid && isset($favGroupSet[$gid]); @endphp
+                    <div class="grp-head" onclick="dbToggleGroup(this)" style="display:flex;align-items:center;gap:11px;padding:12px 15px;background:var(--surface-2);cursor:pointer">
                         <span style="width:18px;height:18px;color:var(--accent);display:flex"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/></svg></span>
                         <span style="font-weight:600;font-size:14px;flex:1">{{ $gname }}</span>
                         <span style="font-family:var(--font-mono);font-size:11px;padding:2px 8px;border-radius:6px;background:var(--surface-3);color:var(--text-dim)">{{ count($gsites) }} сайтів</span>
-                        <a href="/admin?group={{ urlencode($gname) }}" title="Фільтрувати по цій групі" style="font-size:11.5px;color:var(--text-dim);text-decoration:none;padding:2px 4px">фільтр →</a>
+                        @if($gid)
+                            <button type="button" title="{{ $gfav ? 'Прибрати групу з обраного' : 'Додати групу в обране' }}" onclick="event.stopPropagation();dbToggleGroupFav({{ $gid }})" style="background:transparent;border:0;cursor:pointer;color:{{ $gfav ? 'var(--accent)' : 'var(--text-faint)' }};font-size:14px;padding:0 2px">★</button>
+                        @endif
+                        <span class="grp-chev" style="color:var(--text-faint);font-size:12px;width:14px;text-align:center;transition:transform .15s">▾</span>
                     </div>
+                    <div class="grp-body">
                     @foreach($gsites as $s)
                         @php $isFav = isset($favSet[$s['id']]); @endphp
                         <a class="row-hover" href="/admin/sites/{{ $s['id'] }}/credentials"
@@ -154,6 +170,7 @@
                             <span style="color:var(--text-faint);text-align:right;font-size:14px">›</span>
                         </a>
                     @endforeach
+                    </div>
                 </div>
             @empty
                 <div class="empty"><div class="box"></div><div class="t">Немає груп для показу</div><div class="s">Жоден сайт у поточному фільтрі не входить у групу.</div><a class="btn" href="/admin" style="margin-top:4px">Скинути фільтри</a></div>
@@ -226,6 +243,14 @@
             var u = new URL(location.href);
             if (val) { u.searchParams.set(key, val); } else { u.searchParams.delete(key); }
             location.href = u.pathname + u.search;
+        }
+        // Згортання блоку групи (design: chevron ▾/▸).
+        function dbToggleGroup(head) {
+            var body = head.nextElementSibling;
+            var chev = head.querySelector('.grp-chev');
+            var collapsed = body.style.display === 'none';
+            body.style.display = collapsed ? '' : 'none';
+            if (chev) chev.textContent = collapsed ? '▾' : '▸';
         }
     </script>
 @endsection

@@ -146,6 +146,8 @@ class SiteController extends Controller
                 'group' => $group,
                 'groupId' => $groupModel?->id,
                 'groups' => Group::orderBy('name')->pluck('name')->all(),
+                'groupIdByName' => Group::pluck('id', 'name')->all(),
+                'favoriteGroupIds' => $request->user()?->favoriteGroups()->pluck('groups.id')->all() ?? [],
                 'favoriteIds' => $favoriteIds,
                 'favoriteGroup' => $groupModel && $request->user()?->favoriteGroups()->whereKey($groupModel->id)->exists(),
                 'view' => $view,
@@ -249,5 +251,38 @@ class SiteController extends Controller
         $isFav ? $user->favoriteGroups()->detach($group->id) : $user->favoriteGroups()->attach($group->id);
 
         return response()->json(['favorite' => ! $isFav]);
+    }
+
+    /** Дані для модалки «Групи сайтів»: усі групи + сайти верхнього рівня з членством. */
+    public function groupsData(): JsonResponse
+    {
+        return response()->json([
+            'groups' => Group::orderBy('name')->get(['id', 'name'])->all(),
+            'sites' => Site::query()->whereNull('parent_site_id')->with('groups:id')->orderBy('name')->get()
+                ->map(fn (Site $s) => [
+                    'id' => $s->id,
+                    'name' => $s->name,
+                    'domain' => $s->domain,
+                    'groups' => $s->groups->pluck('id')->all(),
+                ])->all(),
+        ]);
+    }
+
+    /** Створити групу (design: «Нова група → Створити»). Ідемпотентно за назвою. */
+    public function createGroup(Request $request): JsonResponse
+    {
+        $data = $request->validate(['name' => ['required', 'string', 'max:120']]);
+        $group = Group::firstOrCreate(['name' => trim($data['name'])]);
+
+        return response()->json(['id' => $group->id, 'name' => $group->name], $group->wasRecentlyCreated ? 201 : 200);
+    }
+
+    /** Перемкнути членство сайту в групі (design: чекбокс у списку, «застосовується одразу»). */
+    public function toggleSiteGroup(Request $request, Site $site, Group $group): JsonResponse
+    {
+        $has = $site->groups()->whereKey($group->id)->exists();
+        $has ? $site->groups()->detach($group->id) : $site->groups()->attach($group->id);
+
+        return response()->json(['member' => ! $has]);
     }
 }

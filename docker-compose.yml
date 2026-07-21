@@ -86,6 +86,31 @@ services:
     restart: unless-stopped
     networks: [db]
 
+  # Планувальник: щохвилини simulate-heartbeats (живий демо-фліт) + detect-offline (FR-014).
+  scheduler:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    command: php artisan schedule:work
+    volumes:
+      - ./crm:/app
+    working_dir: /app
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      APP_ENV: local
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: database
+    restart: unless-stopped
+    networks: [db]
+
   pgsql:
     image: postgres:16
     volumes:
