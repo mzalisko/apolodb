@@ -211,19 +211,25 @@
         <div style="padding:18px 22px;display:flex;flex-direction:column;gap:16px">
             <div>
                 <label style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0 0 8px">Група</label>
-                <div style="display:flex;gap:8px;margin-bottom:8px">
-                    <input id="grpNewName" type="text" placeholder="Знайти або створити групу…" oninput="grpRenderChips()"
-                           onkeydown="if(event.key==='Enter'){event.preventDefault();grpCreate();}"
-                           style="flex:1;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:12.5px;outline:none">
-                    <button type="button" onclick="grpCreate()" style="padding:8px 13px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:8px;color:var(--text);font:inherit;cursor:pointer;font-size:12px">Створити</button>
+                <div style="position:relative">
+                    <div style="display:flex;gap:8px">
+                        <input id="grpNewName" type="text" placeholder="Знайти або створити групу…" autocomplete="off"
+                               oninput="grpFilter()" onfocus="grpFilter()"
+                               onkeydown="if(event.key==='Enter'){event.preventDefault();grpCreate();}"
+                               style="flex:1;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:12.5px;outline:none">
+                        <button type="button" onclick="grpCreate()" style="padding:8px 13px;background:var(--surface-2);border:1px solid var(--border-strong);border-radius:8px;color:var(--text);font:inherit;cursor:pointer;font-size:12px">Створити</button>
+                    </div>
+                    {{-- Випадний список: рендериться лише при пошуку/фокусі, скролиться, з лімітом → масштаб на 100+/1000+ груп --}}
+                    <div id="grpDropdown" style="display:none;position:absolute;left:0;right:0;top:100%;margin-top:4px;max-height:210px;overflow:auto;background:var(--surface);border:1px solid var(--border-strong);border-radius:9px;z-index:6;box-shadow:0 14px 34px rgba(0,0,0,.45)"></div>
                 </div>
-                <div id="grpChips" style="display:flex;gap:6px;flex-wrap:wrap;max-height:104px;overflow:auto"></div>
-                <div id="grpChipsMore" style="font-size:11px;color:var(--text-faint);margin-top:6px;display:none"></div>
             </div>
             <div>
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-                    <label style="font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0">Сайти в групі «<span id="grpActiveName">—</span>»</label>
-                    <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint)"><span id="grpMemberCount">0</span> обрано</span>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px">
+                    <div style="display:flex;align-items:center;gap:7px;min-width:0">
+                        <label style="font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0;flex-shrink:0">Сайти в групі</label>
+                        <span id="grpActiveName" style="background:var(--accent-dim);color:var(--accent);padding:2px 9px;border-radius:6px;font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</span>
+                    </div>
+                    <span style="font-family:var(--font-mono);font-size:11px;color:var(--text-faint);flex-shrink:0"><span id="grpMemberCount">0</span> обрано</span>
                 </div>
                 <input id="grpSearch" type="text" oninput="grpRenderSites()" placeholder="Пошук сайту…"
                        style="width:100%;padding:8px 11px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:12.5px;outline:none;margin-bottom:8px">
@@ -316,39 +322,60 @@
             .then(function (r) { return r.json(); }).then(function (d) {
                 dbGrp.groups = d.groups; dbGrp.sites = d.sites;
                 dbGrp.active = dbGrp.groups.length ? dbGrp.groups[0].id : null;
-                grpRenderChips(); grpRenderSites();
+                document.getElementById('grpNewName').value = '';
+                document.getElementById('grpDropdown').style.display = 'none';
+                grpRenderActive(); grpRenderSites();
             });
     }
     function closeGroupManager() {
         document.getElementById('grpOverlay').style.display = 'none';
         if (dbGrp.changed) location.reload();   // оновити список/сайдбар під нові групи
     }
-    // Масштабовано: рендеримо лише збіги пошуку, з лімітом (не 100+ чипів одразу).
-    function grpRenderChips() {
-        var el = document.getElementById('grpChips'); el.innerHTML = '';
+    // Активна група показується лише в заголовку «Сайти в групі «X»» — НЕ як чип/таб.
+    function grpRenderActive() {
+        var ag = dbGrp.groups.filter(function (g) { return g.id === dbGrp.active; })[0];
+        document.getElementById('grpActiveName').textContent = ag ? ag.name : '—';
+    }
+    // Комбобокс: рендеримо лише збіги пошуку у випадному списку з лімітом → масштаб на будь-яку кількість груп.
+    function grpFilter() {
+        var dd = document.getElementById('grpDropdown'); dd.innerHTML = '';
         var raw = document.getElementById('grpNewName').value || '';
         var q = raw.toLowerCase();
-        var CAP = 40;
+        var CAP = 50;
         var matched = dbGrp.groups.filter(function (g) { return !q || g.name.toLowerCase().indexOf(q) !== -1; });
-        var shown = matched.slice(0, CAP);
-        var ag = dbGrp.groups.filter(function (g) { return g.id === dbGrp.active; })[0];
-        if (ag && !shown.some(function (g) { return g.id === dbGrp.active; }) && (!q || ag.name.toLowerCase().indexOf(q) !== -1)) shown.unshift(ag);
-        shown.forEach(function (g) {
+        matched.slice(0, CAP).forEach(function (g) {
             var active = g.id === dbGrp.active;
-            var b = document.createElement('button');
-            b.type = 'button'; b.textContent = g.name;
-            b.style.cssText = 'padding:6px 11px;border-radius:8px;cursor:pointer;font:inherit;font-size:12px;border:1px solid '
-                + (active ? 'var(--accent)' : 'var(--border)') + ';background:' + (active ? 'var(--accent-dim)' : 'var(--bg)')
-                + ';color:' + (active ? 'var(--accent)' : 'var(--text-dim)');
-            b.onclick = function () { dbGrp.active = g.id; grpRenderChips(); grpRenderSites(); };
-            el.appendChild(b);
+            var n = dbGrp.sites.filter(function (s) { return s.groups.indexOf(g.id) !== -1; }).length;
+            var row = document.createElement('div');
+            row.style.cssText = 'padding:8px 11px;cursor:pointer;font-size:12.5px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border);'
+                + (active ? 'background:var(--accent-dim);color:var(--accent)' : 'color:var(--text)');
+            var nm = document.createElement('span'); nm.textContent = g.name;
+            nm.style.cssText = 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap';
+            var cnt = document.createElement('span'); cnt.textContent = n;
+            cnt.style.cssText = 'font-family:var(--font-mono);font-size:10.5px;color:var(--text-faint);flex-shrink:0';
+            row.appendChild(nm); row.appendChild(cnt);
+            row.onmousedown = function (e) {
+                e.preventDefault();
+                dbGrp.active = g.id;
+                document.getElementById('grpNewName').value = '';
+                dd.style.display = 'none';
+                grpRenderActive(); grpRenderSites();
+            };
+            dd.appendChild(row);
         });
-        var more = document.getElementById('grpChipsMore');
-        var hidden = matched.length - Math.min(matched.length, CAP);
-        if (matched.length === 0 && q) { more.textContent = 'Немає групи «' + raw.trim() + '» — натисніть «Створити».'; more.style.display = 'block'; }
-        else if (hidden > 0) { more.textContent = '…ще ' + hidden + ' груп — уточніть пошук.'; more.style.display = 'block'; }
-        else { more.style.display = 'none'; }
-        document.getElementById('grpActiveName').textContent = ag ? ag.name : '—';
+        if (matched.length > CAP) {
+            var more = document.createElement('div');
+            more.textContent = '…ще ' + (matched.length - CAP) + ' — уточніть пошук';
+            more.style.cssText = 'padding:8px 11px;font-size:11px;color:var(--text-faint)';
+            dd.appendChild(more);
+        }
+        if (matched.length === 0) {
+            var no = document.createElement('div');
+            no.textContent = q ? 'Немає групи «' + raw.trim() + '» — натисніть «Створити».' : 'Груп ще немає.';
+            no.style.cssText = 'padding:10px 11px;font-size:11.5px;color:var(--text-faint)';
+            dd.appendChild(no);
+        }
+        dd.style.display = 'block';
     }
     function grpRenderSites() {
         var list = document.getElementById('grpSiteList'); list.innerHTML = '';
@@ -394,10 +421,16 @@
                 if (!dbGrp.groups.filter(function (x) { return x.id === g.id; }).length) dbGrp.groups.push(g);
                 dbGrp.groups.sort(function (a, b) { return a.name.localeCompare(b.name, 'uk'); });
                 dbGrp.active = g.id;
-                grpRenderChips(); grpRenderSites();
+                document.getElementById('grpDropdown').style.display = 'none';
+                grpRenderActive(); grpRenderSites();
             });
     }
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeGroupManager(); });
+    // Ховаємо випадний список груп при кліку поза ним.
+    document.addEventListener('click', function (e) {
+        var dd = document.getElementById('grpDropdown');
+        if (dd && dd.style.display === 'block' && e.target.id !== 'grpNewName' && !dd.contains(e.target)) dd.style.display = 'none';
+    });
 </script>
 </body>
 </html>
