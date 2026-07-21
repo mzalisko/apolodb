@@ -16,12 +16,8 @@ services:
         condition: service_started
     environment:
       APP_ENV: local
-      DB_CONNECTION: pgsql
-      DB_HOST: pgsql
-      DB_PORT: 5432
-      DB_DATABASE: databridge
-      DB_USERNAME: databridge
-      DB_PASSWORD: secret
+      # DB-конфіг береться з crm/.env (databridge). НЕ ставимо DB_DATABASE тут як реальну
+      # env-змінну, бо вона перебиває phpunit-форс databridge_test → тести стирали б dev-БД.
       REDIS_CLIENT: phpredis
       REDIS_HOST: redis
       REDIS_PORT: 6379
