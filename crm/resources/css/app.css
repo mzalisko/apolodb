@@ -151,6 +151,8 @@ a:hover { color: var(--text); }
 .trow { padding: var(--row-pad); border-bottom: 1px solid var(--border); cursor: pointer; color: inherit; text-decoration: none; }
 .trow:last-child { border-bottom: 0; }
 .trow:hover { background: var(--surface-2); }
+/* рядок сайту/піддомена: hover перекриває навіть inline background піддомена */
+.row-hover:hover { background: var(--surface-2) !important; }
 .trow .nm { font-weight: 600; font-size: 13px; }
 .trow .dm { font-family: 'IBM Plex Mono'; font-size: 11px; color: var(--text-dim); }
 .star { background: transparent; border: 0; cursor: pointer; color: var(--text-faint); font-size: 14px; padding: 0; line-height: 1; }

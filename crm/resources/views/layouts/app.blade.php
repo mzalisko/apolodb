@@ -6,6 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'DataBridge')</title>
     @vite('resources/css/app.css')
+    <script>
+        // Тема застосовується ДО першого паніту (без миготіння). За замовчуванням — темна.
+        (function () {
+            var s = localStorage.getItem('db-theme-v2');
+            document.documentElement.setAttribute('data-theme', s === 'light' ? 'light' : 'dark');
+        })();
+    </script>
 </head>
 <body>
 <div class="app">
@@ -97,13 +104,11 @@
 <script>
     (function () {
         const root = document.documentElement;
-        const saved = localStorage.getItem('db-theme');
-        if (saved) root.setAttribute('data-theme', saved);
         const btn = document.getElementById('themeToggle');
         if (btn) btn.addEventListener('click', function () {
             const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
             root.setAttribute('data-theme', next);
-            localStorage.setItem('db-theme', next);
+            localStorage.setItem('db-theme-v2', next);
         });
     })();
 </script>

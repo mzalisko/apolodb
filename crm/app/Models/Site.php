@@ -16,6 +16,7 @@ class Site extends Model
     protected $fillable = [
         'name',
         'domain',
+        'parent_site_id',
         'site_identifier',
         'active_credential_id',
         'deactivated_at',
@@ -28,6 +29,18 @@ class Site extends Model
     public function status(): HasOne
     {
         return $this->hasOne(SiteStatus::class);
+    }
+
+    /** Батьківський сайт (для піддомена). null → сайт верхнього рівня. */
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(Site::class, 'parent_site_id');
+    }
+
+    /** Піддомени, закріплені за цим сайтом (вкладена структура списку). */
+    public function subdomains(): HasMany
+    {
+        return $this->hasMany(Site::class, 'parent_site_id');
     }
 
     public function credentials(): HasMany

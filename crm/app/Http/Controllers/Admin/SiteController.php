@@ -86,15 +86,26 @@ class SiteController extends Controller
             ->groupBy('status')
             ->pluck('c', 'status');
 
-        $total = (int) Site::count();
+        // Список і лічильник «N із M» — лише сайти верхнього рівня; піддомени вкладені в рядок.
+        $topLevel = fn () => Site::query()->whereNull('parent_site_id');
+        $total = (int) $topLevel()->count();
 
-        $query = Site::query()->with('status');
+        $query = $topLevel()->with(['status', 'groups', 'subdomains.status']);
         if ($filter) {
             $query->whereHas('status', fn ($q) => $q->where('status', $filter));
         }
         $filtered = $filter ? (int) (clone $query)->count() : $total;
 
         $sites = $query->orderBy('name')->forPage($page, $perPage)->get();
+
+        $mapSite = fn (Site $s) => [
+            'id' => $s->id,
+            'name' => $s->name,
+            'domain' => $s->domain,
+            'status' => $s->status?->status,
+            'last_seen_at' => $s->status?->last_seen_at?->toIso8601String(),
+            'token_state' => $s->active_credential_id ? 'active' : 'revoked',
+        ];
 
         $payload = [
             'counts' => [
@@ -107,13 +118,9 @@ class SiteController extends Controller
                     'inactive' => (int) ($byStatus['inactive'] ?? 0),
                 ],
             ],
-            'sites' => $sites->map(fn (Site $s) => [
-                'id' => $s->id,
-                'name' => $s->name,
-                'domain' => $s->domain,
-                'status' => $s->status?->status,
-                'last_seen_at' => $s->status?->last_seen_at?->toIso8601String(),
-                'token_state' => $s->active_credential_id ? 'active' : 'revoked',
+            'sites' => $sites->map(fn (Site $s) => $mapSite($s) + [
+                'groups' => $s->groups->pluck('name')->values()->all(),
+                'subdomains' => $s->subdomains->sortBy('name')->map($mapSite)->values()->all(),
             ])->values()->all(),
             'page' => $page,
             'per_page' => $perPage,
