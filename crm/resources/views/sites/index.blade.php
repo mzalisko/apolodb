@@ -4,7 +4,8 @@
 @section('content')
     @php
         $c = $payload['counts'];
-        $labels = ['online' => 'Онлайн', 'pending' => 'Очікує', 'offline' => 'Офлайн', 'inactive' => 'Неактивний'];
+        // Канонічний словник станів із дизайну (design.status): колір збігається зі статусом зв'язності.
+        $labels = ['online' => 'Активний', 'pending' => 'Очікує', 'offline' => 'Помилка', 'inactive' => 'Неактивний'];
     @endphp
 
     {{-- ── Панель фільтрів (точно як design/CRM v2.dc.html · рядок 153) ── --}}
@@ -18,9 +19,9 @@
             <select onchange="location.href=this.value"
                     style="padding:8px 30px 8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);font:inherit;font-size:12.5px;cursor:pointer;min-width:150px;-webkit-appearance:none;appearance:none">
                 <option value="/admin" @selected(! $filter)>Статус: усі</option>
-                <option value="/admin?status=online" @selected($filter === 'online')>Онлайн</option>
-                <option value="/admin?status=pending" @selected($filter === 'pending')>Очікує</option>
-                <option value="/admin?status=offline" @selected($filter === 'offline')>Офлайн</option>
+                <option value="/admin?status=online" @selected($filter === 'online')>Активні</option>
+                <option value="/admin?status=pending" @selected($filter === 'pending')>Очікують</option>
+                <option value="/admin?status=offline" @selected($filter === 'offline')>Помилка</option>
                 <option value="/admin?status=inactive" @selected($filter === 'inactive')>Неактивні</option>
             </select>
             <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-faint);font-size:9px">▼</span>

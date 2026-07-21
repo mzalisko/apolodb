@@ -56,11 +56,11 @@
             <button class="legend-btn" type="button">
                 <span>Легенда та позначення</span>
                 <span class="legend-dots">
-                    <span style="background:var(--ok)"></span>
-                    <span style="background:var(--reserve)"></span>
-                    <span style="background:var(--text-faint)"></span>
-                    <span style="background:var(--info)"></span>
-                    <span style="background:var(--err)"></span>
+                    <span style="background:var(--ok)" title="Активний"></span>
+                    <span style="background:var(--reserve)" title="Резерв"></span>
+                    <span style="background:var(--text-faint)" title="Неактивний"></span>
+                    <span style="background:var(--info)" title="Очікує"></span>
+                    <span style="background:var(--err)" title="Помилка"></span>
                 </span>
             </button>
             @auth
