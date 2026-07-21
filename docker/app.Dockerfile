@@ -4,7 +4,7 @@ FROM php:8.5-cli
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libpq-dev git unzip \
-    && docker-php-ext-install pdo pdo_pgsql bcmath \
+    && docker-php-ext-install pdo pdo_pgsql bcmath pcntl \
     && pecl install redis \
     && docker-php-ext-enable redis \
     && apt-get clean \

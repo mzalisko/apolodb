@@ -34,7 +34,7 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 - [x] T001 Створити структуру монорепо: каталоги `crm/` (Laravel) і `plugin/` (WordPress) у корені (Принцип I)
 - [x] T002 Ініціалізувати Laravel 13.x у `crm/` (PHP 8.3+); налаштувати `crm/.env` під PostgreSQL 16 + Redis
-- [ ] T003 [P] Додати й налаштувати Laravel Horizon (Redis-черга) у `crm/config/horizon.php`
+- [x] T003 [P] Додати й налаштувати Laravel Horizon (Redis-черга) у `crm/config/horizon.php` — встановлено `laravel/horizon ^5.48`, увімкнено `ext-pcntl` у `docker/app.Dockerfile`, додано сервіс `horizon` у `docker-compose.yml` (постійний воркер)
 - [ ] T004 [P] Налаштувати Pest у `crm/` (`crm/tests/Pest.php`, `crm/phpunit.xml`)
 - [x] T005 [P] Налаштувати Vite + npm із **локальними** ассетами (шрифти/Tailwind/Alpine self-hosted, без CDN — Принцип III) у `crm/package.json`, `crm/vite.config.js`
 - [x] T006 [P] Створити `crm/config/databridge.php` з параметрами: `offline_window` (~300s), `timestamp_tolerance` (±300s), `nonce_ttl` (600s), `heartbeat_interval` (~60s), rate-limits (proxy ~10/min, backend ~6/min), `max_body` (8 KiB)
@@ -173,7 +173,7 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 - [x] T057 [P] Кореляція аудиту: correlation-id (`X-DB-Nonce`/`X-DB-Request-Id`) у логах бекенду ↔ edge-лог проксі (FR-033) у `crm/app/Services/EventLogger.php`
 - [x] T058 [P] Документація деплою проксі/ingress (продукт-агностично): TLS на **обох** ділянках, rate-limit за `site-id`, приховування бекенду, критерії відбору (contract Додаток C) у `docs/deploy-proxy.md`
 - [x] T059 [P] Перевірка керування ключем шифрування секретів (env/KMS, поза БД/репо — конституція v2.0.1) у `docs/secrets.md`
-- [ ] T060 Навантажувальна перевірка приймання: 500+ сайтів × ~1/хв + бурст (SC-007) через Horizon-метрики
+- [x] T060 Навантажувальна перевірка приймання: 500+ сайтів × ~1/хв + бурст (SC-007) через Horizon-метрики — команда `databridge:loadtest` (`crm/app/Console/Commands/LoadTest.php`). Результат 2026-07-21: **500 сайтів** — приймання (HMAC-verify+enqueue) **232 hb/с** за 2.16 с; дренаж Horizon **~58 job/с** за 8.65 с; **500/500 online**, черга 0 — без деградації. ✅ SC-007
 - [x] T061 [P] README для `crm/` і `plugin/` (запуск, черга, планувальник, конфіг) — `crm/README.md`, `plugin/README.md`
 - [x] T062 Прогін `quickstart.md` — наскрізна валідація всіх US
 
