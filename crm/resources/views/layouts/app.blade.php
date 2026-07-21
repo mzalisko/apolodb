@@ -93,7 +93,7 @@
             </button>
             <button class="btn disabled" type="button">Масові зміни</button>
             <button class="btn disabled" type="button">Групи</button>
-            <a class="btn btn-accent" href="/admin/sites/create">+ Додати сайт</a>
+            <button class="btn btn-accent" type="button" onclick="openAddSite()">+ Додати сайт</button>
         </header>
 
         <div class="content">
@@ -101,6 +101,59 @@
         </div>
     </div>
 </div>
+
+{{-- ── Модалка «Додати сайт» (design/CRM v2.dc.html · рядок 1108) ── --}}
+<div id="addSiteOverlay" onclick="if(event.target===this)closeAddSite()"
+     style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:55;align-items:center;justify-content:center;padding:30px">
+    <div style="width:460px;background:var(--surface);border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.5)">
+        <div style="padding:18px 22px;border-bottom:1px solid var(--border)">
+            <div style="font-weight:700;font-size:16px">Додати сайт</div>
+            <div style="font-size:12.5px;color:var(--text-dim);margin-top:3px">Новий сайт у мережі</div>
+        </div>
+
+        {{-- крок 1: форма --}}
+        <div id="addSiteStep1">
+            <div style="padding:20px 22px;display:flex;flex-direction:column;gap:14px">
+                <div>
+                    <label style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0 0 7px">Назва</label>
+                    <input id="addSiteName" type="text" placeholder="напр. Сервісний центр"
+                           style="width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font:inherit;font-size:13px;outline:none">
+                </div>
+                <div>
+                    <label style="display:block;font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin:0 0 7px">Домен</label>
+                    <input id="addSiteDomain" type="text" placeholder="novyi-sait.com.ua"
+                           style="width:100%;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:'IBM Plex Mono';font-size:13px;outline:none">
+                </div>
+                <div id="addSiteError" style="display:none;color:var(--err);font-size:12.5px"></div>
+            </div>
+            <div style="padding:15px 22px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px">
+                <div style="flex:1"></div>
+                <button type="button" onclick="closeAddSite()" style="padding:9px 15px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--text-dim);font:inherit;cursor:pointer;font-size:12.5px">Скасувати</button>
+                <button type="button" id="addSiteSubmit" onclick="submitAddSite()" style="padding:9px 18px;background:var(--accent-btn);border:0;border-radius:8px;color:var(--on-accent);font:inherit;font-weight:600;cursor:pointer;font-size:12.5px">Додати сайт</button>
+            </div>
+        </div>
+
+        {{-- крок 2: облікові дані (показ ОДИН РАЗ) --}}
+        <div id="addSiteStep2" style="display:none">
+            <div style="padding:20px 22px;display:flex;flex-direction:column;gap:12px">
+                <div style="font-size:12.5px;color:var(--ok)">Сайт додано. Скопіюйте дані — секрет показується <b>один раз</b>.</div>
+                <div>
+                    <div style="font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px">site-id</div>
+                    <code id="addSiteId" class="mono" style="display:block;word-break:break-all;padding:9px 12px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:12.5px"></code>
+                </div>
+                <div>
+                    <div style="font-size:10.5px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-faint);margin-bottom:4px">signing-secret</div>
+                    <code id="addSiteSecret" class="mono" style="display:block;word-break:break-all;padding:9px 12px;background:var(--accent-dim);border:1px solid var(--accent-btn);border-radius:8px;font-size:12.5px"></code>
+                </div>
+            </div>
+            <div style="padding:15px 22px;border-top:1px solid var(--border);display:flex;gap:10px">
+                <div style="flex:1"></div>
+                <button type="button" onclick="location.href='/admin'" style="padding:9px 18px;background:var(--accent-btn);border:0;border-radius:8px;color:var(--on-accent);font:inherit;font-weight:600;cursor:pointer;font-size:12.5px">Готово</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     (function () {
         const root = document.documentElement;
@@ -111,6 +164,55 @@
             localStorage.setItem('db-theme-v2', next);
         });
     })();
+
+    // ── Модалка «Додати сайт» ──
+    function openAddSite() {
+        document.getElementById('addSiteStep1').style.display = 'block';
+        document.getElementById('addSiteStep2').style.display = 'none';
+        document.getElementById('addSiteError').style.display = 'none';
+        document.getElementById('addSiteName').value = '';
+        document.getElementById('addSiteDomain').value = '';
+        document.getElementById('addSiteOverlay').style.display = 'flex';
+        document.getElementById('addSiteName').focus();
+    }
+    function closeAddSite() {
+        document.getElementById('addSiteOverlay').style.display = 'none';
+    }
+    function submitAddSite() {
+        var name = document.getElementById('addSiteName').value.trim();
+        var domain = document.getElementById('addSiteDomain').value.trim();
+        var err = document.getElementById('addSiteError');
+        var submit = document.getElementById('addSiteSubmit');
+        err.style.display = 'none';
+        submit.disabled = true;
+        fetch('/admin/sites', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ name: name, domain: domain })
+        }).then(function (r) {
+            return r.json().then(function (d) { return { status: r.status, d: d }; });
+        }).then(function (res) {
+            submit.disabled = false;
+            if (res.status === 201) {
+                document.getElementById('addSiteId').textContent = res.d.credentials.site_id;
+                document.getElementById('addSiteSecret').textContent = res.d.credentials.signing_secret;
+                document.getElementById('addSiteStep1').style.display = 'none';
+                document.getElementById('addSiteStep2').style.display = 'block';
+            } else {
+                var msg = res.d.message || (res.d.errors ? Object.values(res.d.errors)[0][0] : 'Не вдалося додати сайт.');
+                err.textContent = msg;
+                err.style.display = 'block';
+            }
+        }).catch(function () {
+            submit.disabled = false;
+            err.textContent = 'Помилка мережі.';
+            err.style.display = 'block';
+        });
+    }
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeAddSite();
+    });
 </script>
 </body>
 </html>

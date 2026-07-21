@@ -6,36 +6,64 @@
         $c = $payload['counts'];
         // Канонічний словник станів із дизайну (design.status): колір збігається зі статусом зв'язності.
         $labels = ['online' => 'Активний', 'pending' => 'Очікує', 'offline' => 'Помилка', 'inactive' => 'Неактивний'];
+        $sel = 'padding:8px 30px 8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);font:inherit;font-size:12.5px;cursor:pointer;min-width:120px;-webkit-appearance:none;appearance:none';
+        $arrow = '<span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-faint);font-size:9px">▼</span>';
     @endphp
 
     {{-- ── Панель фільтрів (точно як design/CRM v2.dc.html · рядок 153) ── --}}
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap">
         <div style="display:flex;align-items:center;gap:8px;padding:3px;background:var(--surface);border:1px solid var(--border);border-radius:9px">
             <button type="button" title="Показати лише обране"
-                    style="padding:6px 11px;background:transparent;border:0;border-radius:7px;color:var(--text-dim);font:inherit;font-size:12px;cursor:pointer">★ Обране</button>
+                    style="padding:5px 11px;border-radius:7px;border:0;cursor:pointer;font:inherit;font-size:12.5px;font-weight:500;background:transparent;color:var(--text-dim)">★ Обране</button>
         </div>
 
-        <label style="display:flex;flex-direction:column;gap:0;position:relative">
-            <select onchange="location.href=this.value"
-                    style="padding:8px 30px 8px 12px;background:var(--surface);border:1px solid var(--border);border-radius:9px;color:var(--text);font:inherit;font-size:12.5px;cursor:pointer;min-width:150px;-webkit-appearance:none;appearance:none">
-                <option value="/admin" @selected(! $filter)>Статус: усі</option>
-                <option value="/admin?status=online" @selected($filter === 'online')>Активні</option>
-                <option value="/admin?status=pending" @selected($filter === 'pending')>Очікують</option>
-                <option value="/admin?status=offline" @selected($filter === 'offline')>Помилка</option>
-                <option value="/admin?status=inactive" @selected($filter === 'inactive')>Неактивні</option>
-            </select>
-            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--text-faint);font-size:9px">▼</span>
+        {{-- Групи --}}
+        <label style="position:relative;display:flex;margin:0">
+            <select onchange="dbFilter('group', this.value)" style="{{ $sel }}">
+                <option value="" @selected(! $group)>Усі групи</option>
+                @foreach($groups as $g)
+                    <option value="{{ $g }}" @selected($group === $g)>{{ $g }}</option>
+                @endforeach
+            </select>{!! $arrow !!}
+        </label>
+
+        {{-- Статус --}}
+        <label style="position:relative;display:flex;margin:0">
+            <select onchange="dbFilter('status', this.value)" style="{{ $sel }}">
+                <option value="" @selected(! $filter)>Будь-який статус</option>
+                <option value="online" @selected($filter === 'online')>Активний</option>
+                <option value="pending" @selected($filter === 'pending')>Очікує</option>
+                <option value="offline" @selected($filter === 'offline')>Помилка</option>
+                <option value="inactive" @selected($filter === 'inactive')>Неактивний</option>
+            </select>{!! $arrow !!}
+        </label>
+
+        {{-- Типи даних (телефони/ціни/… — наступні фічі) --}}
+        <label style="position:relative;display:flex;margin:0">
+            <select style="{{ $sel }}" title="Фільтр за типом даних (наступні фічі)">
+                <option>Усі типи даних</option>
+                <option>Телефони</option><option>Месенджери</option><option>Ціни</option><option>Соцмережі</option><option>Адреси</option>
+            </select>{!! $arrow !!}
+        </label>
+
+        {{-- Гео (наступні фічі) --}}
+        <label style="position:relative;display:flex;margin:0">
+            <select style="{{ $sel }}" title="Фільтр за гео-правилом (наступні фічі)">
+                <option>Будь-яке гео</option>
+                <option>Показ всім</option><option>Всім, крім…</option><option>Тільки…</option>
+            </select>{!! $arrow !!}
         </label>
 
         <div style="flex:1"></div>
 
+        {{-- View-tabs --}}
         <div style="display:flex;padding:3px;background:var(--surface);border:1px solid var(--border);border-radius:9px;gap:2px">
-            <button type="button" title="Список" style="padding:6px 11px;background:var(--accent-dim);border:0;border-radius:7px;color:var(--accent);font:inherit;font-weight:600;font-size:12px;cursor:default">≣</button>
-            <button type="button" title="Плитки" style="padding:6px 11px;background:transparent;border:0;border-radius:7px;color:var(--text-dim);font:inherit;font-size:12px;cursor:pointer;opacity:.55">▦</button>
-            <button type="button" title="Групи" style="padding:6px 11px;background:transparent;border:0;border-radius:7px;color:var(--text-dim);font:inherit;font-size:12px;cursor:pointer;opacity:.55">⊟</button>
+            <button type="button" title="Таблиця з піддоменами" style="padding:6px 12px;border-radius:7px;border:0;cursor:default;font:inherit;font-size:12px;font-weight:500;background:var(--accent-dim);color:var(--accent)">Список</button>
+            <button type="button" title="Картки сайтів (наступні фічі)" style="padding:6px 12px;border-radius:7px;border:0;cursor:default;font:inherit;font-size:12px;font-weight:500;background:transparent;color:var(--text-dim)">Плитки</button>
+            <button type="button" title="Групувати по групах (наступні фічі)" style="padding:6px 12px;border-radius:7px;border:0;cursor:default;font:inherit;font-size:12px;font-weight:500;background:transparent;color:var(--text-dim)">Групи</button>
         </div>
 
-        <span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--text-faint)">{{ $c['filtered'] }} із {{ $c['total'] }}</span>
+        <span style="font-family:'IBM Plex Mono';font-size:12px;color:var(--text-faint)">{{ $c['filtered'] }} із {{ $c['total'] }} сайтів</span>
     </div>
 
     {{-- ── Таблиця сайтів (грід 26px 2.4fr 1fr 1fr 40px) ── --}}
@@ -94,4 +122,13 @@
             </div>
         @endforelse
     </div>
+
+    <script>
+        // Фільтр зберігає інші query-параметри (комбіновані фільтри — design brief §2).
+        function dbFilter(key, val) {
+            var u = new URL(location.href);
+            if (val) { u.searchParams.set(key, val); } else { u.searchParams.delete(key); }
+            location.href = u.pathname + u.search;
+        }
+    </script>
 @endsection

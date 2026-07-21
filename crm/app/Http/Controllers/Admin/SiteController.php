@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Group;
 use App\Models\Site;
 use App\Models\SiteStatus;
 use App\Services\CredentialService;
@@ -78,6 +79,7 @@ class SiteController extends Controller
     public function index(Request $request): Response
     {
         $filter = $request->query('status');
+        $group = $request->query('group');
         $perPage = max(1, (int) $request->query('per_page', 50));
         $page = max(1, (int) $request->query('page', 1));
 
@@ -94,7 +96,10 @@ class SiteController extends Controller
         if ($filter) {
             $query->whereHas('status', fn ($q) => $q->where('status', $filter));
         }
-        $filtered = $filter ? (int) (clone $query)->count() : $total;
+        if ($group) {
+            $query->whereHas('groups', fn ($q) => $q->where('name', $group));
+        }
+        $filtered = ($filter || $group) ? (int) (clone $query)->count() : $total;
 
         $sites = $query->orderBy('name')->forPage($page, $perPage)->get();
 
@@ -127,7 +132,12 @@ class SiteController extends Controller
         ];
 
         if (! $request->wantsJson()) {
-            return response()->view('sites.index', ['payload' => $payload, 'filter' => $filter]);
+            return response()->view('sites.index', [
+                'payload' => $payload,
+                'filter' => $filter,
+                'group' => $group,
+                'groups' => Group::orderBy('name')->pluck('name')->all(),
+            ]);
         }
 
         return response()->json($payload);
