@@ -15,7 +15,17 @@ class EnsureAdmin
     {
         $user = $request->user();
 
-        if (! $user || ! $user->isActive() || ! $user->isAdmin()) {
+        // Неавтентифікований браузер → на логін; JSON-клієнт → 403.
+        if (! $user) {
+            if ($request->wantsJson()) {
+                abort(403, 'Недостатньо прав.');
+            }
+
+            return redirect()->route('login');
+        }
+
+        // Автентифікований, але не активний адмін → 403 (FR-022, A-5).
+        if (! $user->isActive() || ! $user->isAdmin()) {
             abort(403, 'Недостатньо прав.');
         }
 

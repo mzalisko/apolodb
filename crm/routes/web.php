@@ -1,13 +1,17 @@
 <?php
 
 use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\AuthController;
 use App\Http\Middleware\EnsureAdmin;
 use App\Models\Site;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', fn () => redirect('/admin'));
+
+// Логін оператора (сесія + CSRF).
+Route::get('/login', [AuthController::class, 'show'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/logout', [AuthController::class, 'logout']);
 
 /*
  * CRM-internal admin операції (contract §3). Лише авторизовані оператори (FR-022).

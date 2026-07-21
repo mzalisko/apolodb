@@ -30,6 +30,38 @@ services:
       SESSION_DRIVER: database
     networks: [db]
 
+  # Веб-сервер для перегляду в браузері: http://localhost:8000
+  web:
+    build:
+      context: .
+      dockerfile: docker/app.Dockerfile
+    command: php artisan serve --host 0.0.0.0 --port 8000
+    volumes:
+      - ./crm:/app
+    working_dir: /app
+    ports:
+      - "8000:8000"
+    depends_on:
+      pgsql:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      APP_ENV: local
+      DB_CONNECTION: pgsql
+      DB_HOST: pgsql
+      DB_PORT: 5432
+      DB_DATABASE: databridge
+      DB_USERNAME: databridge
+      DB_PASSWORD: secret
+      REDIS_CLIENT: phpredis
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      QUEUE_CONNECTION: redis
+      CACHE_STORE: redis
+      SESSION_DRIVER: file
+    networks: [db]
+
   pgsql:
     image: postgres:16
     environment:

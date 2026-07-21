@@ -36,7 +36,7 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 - [x] T002 Ініціалізувати Laravel 13.x у `crm/` (PHP 8.3+); налаштувати `crm/.env` під PostgreSQL 16 + Redis
 - [ ] T003 [P] Додати й налаштувати Laravel Horizon (Redis-черга) у `crm/config/horizon.php`
 - [ ] T004 [P] Налаштувати Pest у `crm/` (`crm/tests/Pest.php`, `crm/phpunit.xml`)
-- [ ] T005 [P] Налаштувати Vite + npm із **локальними** ассетами (шрифти/Tailwind/Alpine self-hosted, без CDN — Принцип III) у `crm/package.json`, `crm/vite.config.js`
+- [x] T005 [P] Налаштувати Vite + npm із **локальними** ассетами (шрифти/Tailwind/Alpine self-hosted, без CDN — Принцип III) у `crm/package.json`, `crm/vite.config.js`
 - [x] T006 [P] Створити `crm/config/databridge.php` з параметрами: `offline_window` (~300s), `timestamp_tolerance` (±300s), `nonce_ttl` (600s), `heartbeat_interval` (~60s), rate-limits (proxy ~10/min, backend ~6/min), `max_body` (8 KiB)
 - [x] T007 [P] Скелет WordPress-плагіна: `plugin/data-site.php` (нейтральна ідентичність «Данные сайта», префікс `sd_`/`SD_`, заголовок плагіна) + `plugin/readme.txt`
 - [x] T008 [P] Лінтери/стандарти: Laravel Pint у `crm/`; PHPCS + WordPress Coding Standards у `plugin/` (`plugin/phpcs.xml`)

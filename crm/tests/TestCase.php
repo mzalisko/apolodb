@@ -13,5 +13,7 @@ abstract class TestCase extends BaseTestCase
         // Ізольовані драйвери для тестів (Compose-env може лишати redis; форсуємо тут).
         config()->set('queue.default', 'sync');   // ProcessHeartbeat виконується синхронно
         config()->set('cache.default', 'array');  // nonce-store детермінований у межах тесту
+
+        $this->withoutVite();                      // @vite у view — no-op у тестах (без build-маніфесту)
     }
 }
