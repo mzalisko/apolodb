@@ -11,6 +11,7 @@ use App\Services\EventLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * CRM-internal операції над сайтами (contract §3). Лише авторизовані оператори.
@@ -74,7 +75,7 @@ class SiteController extends Controller
     }
 
     /** §3.3 Список сайтів зі статусом + часом оновлення, фільтр «N із M» (FR-015/016/017/018). */
-    public function index(Request $request): \Symfony\Component\HttpFoundation\Response
+    public function index(Request $request): Response
     {
         $filter = $request->query('status');
         $perPage = max(1, (int) $request->query('per_page', 50));

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Jobs\ProcessHeartbeat;
 use App\Models\Site;
 use App\Services\HmacVerifier;
-use App\Support\CanonicalRequest;
 use App\Services\NonceStore;
+use App\Support\CanonicalRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 

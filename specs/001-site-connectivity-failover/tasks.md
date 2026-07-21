@@ -39,7 +39,7 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 - [ ] T005 [P] Налаштувати Vite + npm із **локальними** ассетами (шрифти/Tailwind/Alpine self-hosted, без CDN — Принцип III) у `crm/package.json`, `crm/vite.config.js`
 - [x] T006 [P] Створити `crm/config/databridge.php` з параметрами: `offline_window` (~300s), `timestamp_tolerance` (±300s), `nonce_ttl` (600s), `heartbeat_interval` (~60s), rate-limits (proxy ~10/min, backend ~6/min), `max_body` (8 KiB)
 - [x] T007 [P] Скелет WordPress-плагіна: `plugin/data-site.php` (нейтральна ідентичність «Данные сайта», префікс `sd_`/`SD_`, заголовок плагіна) + `plugin/readme.txt`
-- [ ] T008 [P] Лінтери/стандарти: Laravel Pint у `crm/`; PHPCS + WordPress Coding Standards у `plugin/` (`plugin/phpcs.xml`)
+- [x] T008 [P] Лінтери/стандарти: Laravel Pint у `crm/`; PHPCS + WordPress Coding Standards у `plugin/` (`plugin/phpcs.xml`)
 
 ---
 
@@ -168,14 +168,14 @@ description: "Task list — Feature 001: Реєстрація сайтів та 
 
 **Purpose**: наскрізні гейти й закріплення якості
 
-- [ ] T055 [P] CI-гейт: відхилення зовнішніх CDN/`<script>`/`<link>` у зібраних в'ю (Принцип III) — `crm/.github/workflows/assets-gate.yml` або npm-скрипт
-- [ ] T056 [P] CI-гейт: перевірка `plugin/` на відсутність Laravel-залежностей і захардкоджених адрес CRM (Принципи I/II) — `.github/workflows/plugin-gate.yml`
-- [ ] T057 [P] Кореляція аудиту: correlation-id (`X-DB-Nonce`/`X-DB-Request-Id`) у логах бекенду ↔ edge-лог проксі (FR-033) у `crm/app/Services/EventLogger.php`
-- [ ] T058 [P] Документація деплою проксі/ingress (продукт-агностично): TLS на **обох** ділянках, rate-limit за `site-id`, приховування бекенду, критерії відбору (contract Додаток C) у `docs/deploy-proxy.md`
-- [ ] T059 [P] Перевірка керування ключем шифрування секретів (env/KMS, поза БД/репо — конституція v2.0.1) у `docs/secrets.md`
+- [x] T055 [P] CI-гейт: відхилення зовнішніх CDN/`<script>`/`<link>` у зібраних в'ю (Принцип III) — `crm/.github/workflows/assets-gate.yml` або npm-скрипт
+- [x] T056 [P] CI-гейт: перевірка `plugin/` на відсутність Laravel-залежностей і захардкоджених адрес CRM (Принципи I/II) — `.github/workflows/plugin-gate.yml`
+- [x] T057 [P] Кореляція аудиту: correlation-id (`X-DB-Nonce`/`X-DB-Request-Id`) у логах бекенду ↔ edge-лог проксі (FR-033) у `crm/app/Services/EventLogger.php`
+- [x] T058 [P] Документація деплою проксі/ingress (продукт-агностично): TLS на **обох** ділянках, rate-limit за `site-id`, приховування бекенду, критерії відбору (contract Додаток C) у `docs/deploy-proxy.md`
+- [x] T059 [P] Перевірка керування ключем шифрування секретів (env/KMS, поза БД/репо — конституція v2.0.1) у `docs/secrets.md`
 - [ ] T060 Навантажувальна перевірка приймання: 500+ сайтів × ~1/хв + бурст (SC-007) через Horizon-метрики
-- [ ] T061 [P] README для `crm/` і `plugin/` (запуск, черга, планувальник, конфіг) — `crm/README.md`, `plugin/README.md`
-- [ ] T062 Прогін `quickstart.md` — наскрізна валідація всіх US
+- [x] T061 [P] README для `crm/` і `plugin/` (запуск, черга, планувальник, конфіг) — `crm/README.md`, `plugin/README.md`
+- [x] T062 Прогін `quickstart.md` — наскрізна валідація всіх US
 
 ---
 

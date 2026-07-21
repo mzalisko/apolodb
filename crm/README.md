@@ -1,58 +1,42 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DataBridge CRM
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Laravel 13 бекенд: реєстрація сайтів, токени, приймання heartbeat, моніторинг статусу
+підключення (фіча `001-site-connectivity-failover`).
 
-## About Laravel
+**Стек**: PHP 8.3+ · Laravel 13 · PostgreSQL 16 · Redis (черга/кеш/nonce) · Blade + Vite (локальні
+ассети, без CDN).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Запуск (Docker, з кореня монорепо)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
-
-```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+```sh
+docker compose build app
+docker compose run --rm app php artisan migrate --force
+docker compose run --rm app php artisan test
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Для роботи в проді потрібні (окремі процеси):
 
-## Contributing
+```sh
+php artisan queue:work        # обробка ProcessHeartbeat (async, FR-010)
+php artisan schedule:work     # sites:detect-offline щохвилини (FR-014)
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Конфігурація
 
-## Code of Conduct
+- `config/databridge.php` — інтервал heartbeat, вікно офлайну, вікно timestamp, nonce TTL,
+  rate-limits, максимальний розмір тіла (усе через env).
+- `APP_KEY` (`.env`) — ключ шифрування per-site секретів (див. `../docs/secrets.md`).
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Ендпоінти
 
-## Security Vulnerabilities
+- `POST /v1/heartbeat` — публічний ingest (підпис HMAC; api-група, без сесії/CSRF).
+- `POST /admin/sites`, `GET /admin/sites`, `POST /admin/sites/{id}/deactivate|reactivate`,
+  `POST /admin/sites/{id}/credentials/revoke|reissue` — операторські (session + EnsureAdmin).
+- `GET /admin` — Blade-список сайтів; `/admin/sites/create` — форма реєстрації.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Контракт wire-format — `../specs/001-site-connectivity-failover/contracts/ingest-contract.md`.
 
-## License
+## Тести
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+`php artisan test` (PHPUnit). Тестова БД — `databridge_test` (PostgreSQL), драйвери форсуються у
+`phpunit.xml` + `tests/TestCase.php` (sync-queue, array-cache).

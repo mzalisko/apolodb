@@ -1,0 +1,68 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+  gates:
+    name: Constitution gates
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run gates (Принципи I/II/III)
+        run: bash scripts/check-gates.sh
+
+  crm-tests:
+    name: CRM tests (Laravel + PostgreSQL + Redis)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: databridge_test
+          POSTGRES_USER: databridge
+          POSTGRES_PASSWORD: secret
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U databridge"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, redis, bcmath
+          coverage: none
+      - name: Install dependencies
+        working-directory: crm
+        run: composer install --no-interaction --prefer-dist --no-progress
+      - name: Prepare app
+        working-directory: crm
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+      - name: Run tests
+        working-directory: crm
+        env:
+          DB_CONNECTION: pgsql
+          DB_HOST: 127.0.0.1
+          DB_PORT: 5432
+          DB_DATABASE: databridge_test
+          DB_USERNAME: databridge
+          DB_PASSWORD: secret
+          REDIS_HOST: 127.0.0.1
+        run: php artisan test
+
+  plugin-lint:
+    name: Plugin lint (vanilla PHP)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+      - name: php -l
+        working-directory: plugin
+        run: for f in data-site.php includes/*.php; do php -l "$f"; done
